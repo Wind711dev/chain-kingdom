@@ -1,0 +1,41 @@
+.hud {
+  position: fixed;
+  top: 10px;
+  left: 0;
+  display: flex;
+  justify-content: end;
+  gap: 15px;
+  width: 100%;
+  z-index: 999;
+  padding-right: 10px;
+  .hud-item {
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+    width: 15vw;
+    height: 15vw;
+    background-image: url('../../assets/object/hub_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    .gradient-text {
+      background: linear-gradient(to bottom, #efc312, #cf9506);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: bold;
+      font-size: 4vw;
+    }
+  }
+
+  .hud-item img {
+    width: 4vw;
+    height: 4vw;
+  }
+}

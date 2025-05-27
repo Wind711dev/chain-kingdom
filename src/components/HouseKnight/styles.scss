@@ -1,0 +1,30 @@
+.house-container {
+  position: absolute;
+  top: 12vh;
+  left: 1vw;
+  width: 75vw;
+  height: auto;
+  .house {
+    width: 80vw;
+    height: auto;
+  }
+
+  .knight {
+    position: absolute;
+    bottom: 25%;
+    right: 15%;
+    width: 18%;
+  }
+  .guard-container {
+    position: absolute;
+    top: 20%;
+    right: -30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25vw;
+    .guard {
+      width: 15vw;
+    }
+  }
+}

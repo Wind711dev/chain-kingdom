@@ -1,0 +1,11 @@
+.background-container {
+  background-image: url('../../assets/object/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  white-space: nowrap;
+  overflow: scroll;
+}
