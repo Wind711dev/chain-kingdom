@@ -13,8 +13,8 @@ interface IDataState {
   goldHoldTime: number;
   milkHoldTime: number;
   increaseLevel: () => void;
-  claimGold: () => void;
-  claimMilk: () => void;
+  claimGold: (gold: number) => void;
+  claimMilk: (milk: number) => void;
   setGoldHolding: () => void;
   setMilkHolding: () => void;
 }
@@ -41,17 +41,13 @@ export const useDataStore = create<IDataState>()((set, get) => ({
       set({ mainLevel: nextLevel });
     }
   },
-  claimGold: () =>
+  claimGold: (gold) =>
     set((state) => ({
-      goldAll: state.goldAll + state.goldHolding,
-      goldHolding: 0,
-      goldHoldTime: 0,
+      goldAll: state.goldAll + gold,
     })),
-  claimMilk: () =>
+  claimMilk: (milk: number) =>
     set((state) => ({
-      milkAll: state.milkAll + state.milkHolding,
-      milkHolding: 0,
-      milkHoldTime: 0,
+      milkAll: state.milkAll + milk,
     })),
   setGoldHolding: () => {
     const currentLevel = get().mainLevel;

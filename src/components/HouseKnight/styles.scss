@@ -1,19 +1,20 @@
 .house-container {
   position: absolute;
-  top: 12vh;
+  top: 8vh;
   left: 1vw;
   width: 75vw;
   height: auto;
   .house {
-    width: 80vw;
+    width: 40vw;
     height: auto;
   }
 
   .knight {
     position: absolute;
-    bottom: 25%;
-    right: 15%;
-    width: 18%;
+    bottom: 5%;
+    left: 30%;
+    width: 7%;
+    transform: scaleX(-1);
   }
   .guard-container {
     position: absolute;

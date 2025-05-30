@@ -16,24 +16,23 @@ export default function RightMsg({
   isAttack,
 }: RightMsgProps) {
   return (
-    <div className='fixed bottom-[2vh] right-[1vw] left-[1vw] h-[35vh] z-50'>
+    <div className='fixed bottom-0 right-0 left-0 top-0 z-50' onClick={onNext}>
       <div className='relative w-full h-full'>
-        <img src={RightMsgBg} alt='' className='absolute w-[85vw] h-[20vh] top-[10%] left-[8%]' />
+        <img
+          src={RightMsgBg}
+          alt=''
+          className='absolute w-[85vw] h-[20vh] bottom-[12%] left-[8%]'
+        />
         <div className='absolute z-50 right-[6vw] bottom-[14vw] h-[21vh] w-[80vw]'>
           <div className='relative w-full h-full'>
             <div className='text-sm text-black text-left leading-tight whitespace-normal break-words px-4 py-[3%]'>
               {text}
             </div>
-            <button
-              className='btn-next absolute bottom-[40%] right-[5%] z-50'
-              onClick={isAttack ? onAttack : onNext}
-            >
-              {isAttack ? (
+            {isAttack && (
+              <button className='btn-next absolute bottom-[60%] right-[10%] z-50' onClick={onAttack}>
                 <span className='gradient-text'>Attack</span>
-              ) : (
-                <span className='gradient-text'>Next</span>
-              )}
-            </button>
+              </button>
+            )}
           </div>
         </div>
 

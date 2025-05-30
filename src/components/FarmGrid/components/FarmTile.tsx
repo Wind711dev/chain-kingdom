@@ -16,9 +16,10 @@ import type { InternalPlantType, Plant, PlantPhase, typeMap } from './types';
 interface FarmTileProps {
   plant: Plant;
   onDrop: (plantId: number, name: keyof typeof typeMap) => void;
+  onClick?: () => void;
 }
 
-export default function FarmTile({ plant, onDrop }: FarmTileProps) {
+export default function FarmTile({ plant, onDrop, onClick }: FarmTileProps) {
   const plantImages = useMemo(
     () => ({
       carrot: { seed: CarrotSeed, sprout: CarrotSprout, mature: CarrotMature },
@@ -50,6 +51,7 @@ export default function FarmTile({ plant, onDrop }: FarmTileProps) {
     <div
       ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={`tile ${isOver ? 'hovered' : ''}`}
+      onClick={onClick}
     >
       <img src={LandPlot} alt='land-plot' className='land-plot' />
       {plantImage && (

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Background from '../../components/Background';
 import Cowshed from '../../components/Cowshed';
 import DefendComponent from '../../components/Defend';
@@ -7,12 +7,12 @@ import PlantSeed from '../../components/FarmGrid/components/PlantSeed';
 import HouseWithKnight from '../../components/HouseKnight';
 import HUDComponent from '../../components/Hub';
 import { CowShedModal } from '../../components/Modal';
+import RewardModal from '../../components/Modal/RewardModal';
+import Warehouse from '../../components/Warehouse';
 import { useDataStore } from '../../stores/data.store';
-import { milkLevelData } from '../../utils/constanst';
 
 export default function HomeScreen() {
-  const { goldAll, milkAll, cowLevel, milkHolding, milkHoldTime, setMilkHolding, claimMilk } =
-    useDataStore();
+  const { goldAll, milkAll, claimMilk, claimGold } = useDataStore();
 
   // const [flyingGoldIcons, setFlyingGoldIcons] = useState<JSX.Element[]>([]);
   // const [startPosMilk, setStartPosMilk] = useState({ x: 0, y: 0 });
@@ -27,6 +27,7 @@ export default function HomeScreen() {
   const [isCowShedOpen, setIsCowShedOpen] = useState(false);
   const [isPlantSeedOpen, setIsPlantSeedOpen] = useState(false);
   const [isShowCombat, setIsShowCombat] = useState(false);
+  const [isShowReward, setIsShowReward] = useState(false);
 
   // const cowRef = useRef<HTMLDivElement>(null);
   const milkHudRef = useRef<HTMLDivElement>(null);
@@ -113,6 +114,18 @@ export default function HomeScreen() {
     setIsCowShedOpen(!isCowShedOpen);
   };
 
+  const onShowRewardModal = () => {
+    setIsShowReward(true);
+  };
+  const onCloseRewardModal = () => {
+    setIsShowReward(false);
+  };
+  const onClaimRewardModal = (data: Record<'coin' | 'milk', number>) => {
+    claimGold(data.coin);
+    setIsShowReward(false);
+    setIsShowCombat(false);
+  };
+
   // useEffect(() => {
   //   if (!startGuard) return;
 
@@ -148,22 +161,22 @@ export default function HomeScreen() {
     }, 100);
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const maxTime = milkLevelData[cowLevel].loadTimeMinutes;
-      const maxMilk = milkLevelData[cowLevel].maxMilkHolding;
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const maxTime = milkLevelData[cowLevel].loadTimeMinutes;
+  //     const maxMilk = milkLevelData[cowLevel].maxMilkHolding;
 
-      if (milkHoldTime >= maxTime || milkHolding >= maxMilk) {
-        clearInterval(interval);
-      } else {
-        setMilkHolding();
-      }
-    }, 500);
+  //     if (milkHoldTime >= maxTime || milkHolding >= maxMilk) {
+  //       clearInterval(interval);
+  //     } else {
+  //       setMilkHolding();
+  //     }
+  //   }, 500);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [milkHoldTime, milkHolding, cowLevel]);
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, [milkHoldTime, milkHolding, cowLevel]);
 
   return (
     <>
@@ -180,27 +193,36 @@ export default function HomeScreen() {
       <CowShedModal
         isOpen={isCowShedOpen}
         onClose={onClickCowShed}
-        handleCailm={claimMilk}
-        milkHolding={milkHolding}
+        handleCailm={(milk) => claimMilk(milk)}
         milkHudRef={milkHudRef}
         setShakeMilkIcon={setShakeMilkIcon}
       />
       <PlantSeed isOpen={isPlantSeedOpen} />
-
+      <RewardModal
+        isOpen={isShowReward}
+        onClose={onCloseRewardModal}
+        onClaim={onClaimRewardModal}
+      />
       <Background overflowHidden={isCowShedOpen}>
         <HouseWithKnight
           houseRef={houseRef}
           onClick={() => {
             onStartCombat();
           }}
+          isDefend={isShowCombat}
         />
-        <Cowshed onClick={onClickCowShed} containerClass='top-[60%]' />
+        <Warehouse />
+        <Cowshed onClick={onClickCowShed} />
         <FarmGrid
           onClick={() => {
             setIsPlantSeedOpen(!isPlantSeedOpen);
           }}
         />
-        <DefendComponent isShow={isShowCombat} defendRef={defendRef} />
+        <DefendComponent
+          isShow={isShowCombat}
+          defendRef={defendRef}
+          showReward={onShowRewardModal}
+        />
         {/* {flyingGoldIcons} */}
         {/* <Tree className='bottom-10' /> */}
       </Background>

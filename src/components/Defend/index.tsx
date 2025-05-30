@@ -33,9 +33,10 @@ const messages: {
 interface MonsterTeamProps {
   isShow?: boolean;
   defendRef: React.RefObject<HTMLDivElement | null>;
+  showReward: () => void;
 }
 
-export default function DefendComponent({ isShow, defendRef }: MonsterTeamProps) {
+export default function DefendComponent({ isShow, defendRef, showReward }: MonsterTeamProps) {
   const [index, setIndex] = useState(0);
   const [isMsg, setIsMsg] = useState(true);
   const [isWin, setIsWin] = useState(false);
@@ -59,6 +60,7 @@ export default function DefendComponent({ isShow, defendRef }: MonsterTeamProps)
       setTimeout(() => {
         setIsAttack(false);
         setIsWin(true);
+        showReward();
       }, 4000);
     }
   }, [isAttack]);

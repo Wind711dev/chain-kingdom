@@ -1,0 +1,27 @@
+.custom-border {
+  border-width: 1px;
+  border-style: solid;
+  border-image-source: linear-gradient(
+    90deg,
+    rgba(123, 55, 6, 0) 4.08%,
+    rgba(123, 55, 6, 0.3) 50%,
+    rgba(123, 55, 6, 0) 95.92%
+  );
+  border-image-slice: 1;
+}
+
+.btn-claim {
+  background: linear-gradient(321.34deg, #0a3c04 2.78%, #164b0b 92.26%);
+  box-shadow: -1px 1px 0px 2.5px #052400;
+  border-radius: 8px;
+  width: 30%;
+  span {
+    background: linear-gradient(180deg, #efc312 22.18%, #cf9506 79.03%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+    // font-size: 4vw;
+    box-shadow: -0.19px 0.13px 0.5px 0px #00000073;
+  }
+}

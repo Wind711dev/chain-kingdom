@@ -8,17 +8,14 @@ interface LeftMsgProps {
 }
 export default function LeftMsg({ text, onNext }: LeftMsgProps) {
   return (
-    <div className='fixed bottom-[2vh] right-[1vw] left-[1vw] h-[35vh] z-50'>
+    <div className='fixed bottom-0 right-0 left-0 top-0 z-50' onClick={onNext}>
       <div className='relative w-full h-full'>
-        <img src={LeftMsgBg} alt='' className='absolute w-[85vw] h-[20vh] top-[5%] left-[5%]' />
+        <img src={LeftMsgBg} alt='' className='absolute w-[85vw] h-[20vh] bottom-[13%] left-[5%]' />
         <div className='absolute z-50 left-[6vw] bottom-[16vw] h-[21vh] w-[80vw]'>
           <div className='relative w-full h-full'>
             <div className='text-sm text-black text-left leading-tight whitespace-normal break-words px-6 py-[3%] '>
               {text}
             </div>
-            <button className='btn-next absolute bottom-[40%] right-[5%] z-50' onClick={onNext}>
-              <span className='gradient-text'>Next</span>
-            </button>
           </div>
         </div>
 

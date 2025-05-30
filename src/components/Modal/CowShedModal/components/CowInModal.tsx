@@ -9,6 +9,7 @@ import MilkIcon from '../../../../assets/object/milk.png';
 import { CowModal, CowStatus } from './type';
 
 import FlyingComponent from '../../../FlyingComponent';
+import CowTooltip from './CowTooltip';
 import './styles.scss';
 
 interface IProps {
@@ -16,9 +17,20 @@ interface IProps {
   onDrop: () => void;
   handleCailm: () => void;
   onClick: () => void;
+  handleEndTime: () => void;
   milkHolding: number;
   milkHudRef: React.RefObject<HTMLDivElement | null>;
   setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
+  isTooltipOpen?: boolean;
+  dataCow?: IDataCow;
+  disabled?: boolean;
+  onBuyFast?: () => void;
+}
+
+interface IDataCow {
+  quantity?: number;
+  time?: number;
+  cost?: number;
 }
 
 function CowInModal({
@@ -29,10 +41,16 @@ function CowInModal({
   handleCailm,
   setShakeMilkIcon,
   onClick,
+  isTooltipOpen,
+  dataCow,
+  handleEndTime,
+  disabled,
+  onBuyFast,
 }: IProps) {
   const [flyingMilk, setFlyingMilk] = useState(false);
   const [flyingMilkIcons, setFlyingMilkIcons] = useState<JSX.Element[]>([]);
   const cowRef = useRef<HTMLDivElement>(null);
+  // const []
 
   const Cow = useMemo(() => {
     switch (status) {
@@ -116,7 +134,8 @@ function CowInModal({
   };
 
   const onClickCow = () => {
-    if (status === CowStatus.ADD) {
+    if (disabled) return;
+    if (status === CowStatus.ADD || status === CowStatus.EATING) {
       onClick();
     }
     if (status === CowStatus.MILKING) {
@@ -139,7 +158,17 @@ function CowInModal({
         className={`${status === CowStatus.ADD ? 'relative' : ''}`}
       >
         <div ref={cowRef}>
-          <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />
+          {status === '1' && (
+            <CowTooltip
+              isOpen={isTooltipOpen}
+              data={dataCow}
+              handleEndTime={handleEndTime}
+              onBuyFast={onBuyFast}
+            >
+              <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />
+            </CowTooltip>
+          )}
+          {status !== '1' && <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />}
         </div>
         {status === CowStatus.ADD && (
           <div className='absolute flex items-center justify-center gap-1 bottom-[5%] left-0 right-0'>
@@ -154,91 +183,3 @@ function CowInModal({
 }
 
 export default React.memo(CowInModal);
-// import { useEffect, useMemo, useRef } from 'react';
-// import { useDrop } from 'react-dnd';
-// import Coin from '../../../../assets/object/coin.png';
-// import CowAdd from '../../../../assets/object/cow_add.png';
-// import CowEat from '../../../../assets/object/cow_eat.png';
-// import CowIdle from '../../../../assets/object/cow_idle.png';
-// import CowMilk from '../../../../assets/object/cow_milk.png';
-// import './styles.scss';
-// import { CowModal, CowStatus } from './type';
-
-// interface IProps {
-//   status: CowStatus | string; // 0: idle, 1: eating, 2: milking
-//   onClick: (ref: React.RefObject<HTMLDivElement | null>) => void;
-//   onDrop: () => void;
-// }
-
-// export default function CowInModal({ status, onClick, onDrop }: IProps) {
-//   const cowRef = useRef<HTMLDivElement>(null);
-
-//   const Cow = useMemo(() => {
-//     switch (status) {
-//       case '0':
-//         return CowIdle;
-//       case '1':
-//         return CowEat;
-//       case '2':
-//         return CowMilk;
-//       default:
-//         return CowAdd;
-//     }
-//   }, [status]);
-
-//   const isDroppable = useMemo(() => {
-//     return status === CowStatus.IDLE;
-//   }, [status]);
-
-//   const [{ isOver, canDrop }, drop] = useDrop(
-//     () => ({
-//       accept: CowModal.GRASS,
-//       drop: () => {
-//         onDrop();
-//       },
-//       collect: (monitor) => ({
-//         isOver: monitor.isOver(),
-//         canDrop: monitor.canDrop(),
-//       }),
-//     }),
-//     [onDrop]
-//   );
-
-//   useEffect(() => {
-//     if (canDrop && isOver && status === CowStatus.IDLE) {
-//       onDrop();
-//     }
-//   }, [canDrop, isOver, status, onDrop]);
-
-//   if (!isDroppable) {
-//     return (
-//       <div
-//         onClick={() => onClick(cowRef)}
-//         className={`h-[30%] ${status === CowStatus.ADD ? 'relative' : ''}`}
-//       >
-//         <div ref={cowRef}>
-//           <img src={Cow} alt='Cow' className='w-[13vw] h-[8vh]' />
-//         </div>
-//         {status === CowStatus.ADD && (
-//           <div className='absolute flex items-center justify-center gap-1 bottom-[15%] left-0 right-0'>
-//             <img src={Coin} alt='Coin' className='w-[25%]' />
-//             <span className='gradient-text'>100</span>
-//           </div>
-//         )}
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div
-//       ref={drop as unknown as React.Ref<HTMLDivElement>}
-//       onClick={() => onClick(cowRef)}
-//       onDragOver={(e) => e.preventDefault()}
-//       className='h-[30%]'
-//     >
-//       <div ref={cowRef}>
-//         <img src={Cow} alt='Cow' className='w-[13vw] h-[8vh]' />
-//       </div>
-//     </div>
-//   );
-// }

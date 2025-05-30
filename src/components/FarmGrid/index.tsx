@@ -24,7 +24,7 @@ export default function FarmGrid({ onClick }: FarmGridProps) {
         ? {
             ...plant,
             type: typeMap[name],
-            phase: 'seed' as const, // hoặc ép kiểu bằng `as PlantPhase`
+            phase: 'seed' as const,
           }
         : plant
     );
@@ -32,9 +32,9 @@ export default function FarmGrid({ onClick }: FarmGridProps) {
   };
 
   return (
-    <div className='farm-grid' onClick={onClick}>
+    <div className='farm-grid'>
       {plants.map((plant) => (
-        <FarmTile key={plant.id} plant={plant} onDrop={handleDrop} />
+        <FarmTile key={plant.id} plant={plant} onDrop={handleDrop} onClick={onClick} />
       ))}
     </div>
   );
