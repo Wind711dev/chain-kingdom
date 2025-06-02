@@ -30,8 +30,8 @@ const ContentElm = ({ quantity, time, cost, onBuyFast }: IContentElm) => {
       </div>
       <div className='custom-border-v'></div>
       <div className='w-[50%] flex flex-col items-center'>
-        <div className='py-2 w-full flex justify-center items-center relative'>
-          <img src={ClockIcon} alt='ClockIcon' className='w-6 h-6 absolute left-[-5%]' />
+        <div className='py-2 w-full flex justify-center items-center relative ml-[20%]'>
+          <img src={ClockIcon} alt='ClockIcon' className='w-6 h-6 absolute left-[-15%]' />
           <div className='time-container w-[100%] h-3 flex items-center justify-center text-[#7B3706] text-sm font-bold uppercase'>
             {time}s
           </div>

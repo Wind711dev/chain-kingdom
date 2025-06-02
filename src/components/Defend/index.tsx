@@ -10,17 +10,17 @@ const messages: {
 }[] = [
   {
     side: 'right',
-    text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
+    text: 'Lorem ipsum dolor sit amet consectetur.',
     isAttack: false,
   },
   {
     side: 'left',
-    text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
+    text: 'Posuere blandit mauris tellus enim platea consequat nulla consequat.',
     isAttack: false,
   },
   {
     side: 'right',
-    text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
+    text: 'Posuere blandit mauris tellus enim platea consequat nulla consequat.',
     isAttack: false,
   },
   {

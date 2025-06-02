@@ -26,7 +26,7 @@ export default function CowShedModal({
   handleCailm,
   milkHudRef,
 }: ICowShedModalProps) {
-  const { goldAll, milkHolding, grass, cowPrice, cowShed, useGold } = useDataStore();
+  const { goldAll, grass, cowPrice, cowShed, useGold } = useDataStore();
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [isTooltip, setIsTooltip] = useState(false);
@@ -39,24 +39,24 @@ export default function CowShedModal({
       time: 0,
       cost: 0,
     },
-    {
-      status: CowStatus.IDLE,
-      quantity: 0,
-      time: 0,
-      cost: 0,
-    },
-    {
-      status: CowStatus.IDLE,
-      quantity: 0,
-      time: 0,
-      cost: 0,
-    },
-    {
-      status: CowStatus.IDLE,
-      quantity: 0,
-      time: 0,
-      cost: 0,
-    },
+    // {
+    //   status: CowStatus.IDLE,
+    //   quantity: 0,
+    //   time: 0,
+    //   cost: 0,
+    // },
+    // {
+    //   status: CowStatus.IDLE,
+    //   quantity: 0,
+    //   time: 0,
+    //   cost: 0,
+    // },
+    // {
+    //   status: CowStatus.IDLE,
+    //   quantity: 0,
+    //   time: 0,
+    //   cost: 0,
+    // },
     // {
     //   status: CowStatus.IDLE,
     //   quantity: 0,
@@ -128,6 +128,7 @@ export default function CowShedModal({
       if (goldAll < cowArray[cow].cost) {
         return;
       }
+      useGold(cowArray[cow].cost);
       setCowArray((prev) => {
         const newCows = [...prev];
         newCows[cow].time = 0;
@@ -135,7 +136,7 @@ export default function CowShedModal({
         return newCows;
       });
     },
-    [setCowArray]
+    [cowArray, goldAll, setCowArray]
   );
 
   const onClickCowEat = useCallback(
@@ -182,7 +183,6 @@ export default function CowShedModal({
           }, 1000);
         }}
         handleEndTime={() => handleEndTime(index)}
-        milkHolding={milkHolding}
         isTooltipOpen={hoveredCow === index && item.time > 0}
         onBuyFast={() => {
           onBuyFast(index);
@@ -200,7 +200,6 @@ export default function CowShedModal({
           setShakeMilkIcon={setShakeMilkIcon}
           handleCailm={() => {}}
           handleEndTime={() => {}}
-          milkHolding={milkHolding}
           cowPrice={cowPrice}
         />
       );
@@ -209,7 +208,6 @@ export default function CowShedModal({
   }, [
     cowArray,
     hoveredCow,
-    milkHolding,
     milkHudRef,
     handleEndTime,
     onClickCowEat,

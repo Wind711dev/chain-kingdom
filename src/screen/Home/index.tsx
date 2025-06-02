@@ -12,7 +12,7 @@ import Warehouse from '../../components/Warehouse';
 import { useDataStore } from '../../stores/data.store';
 
 export default function HomeScreen() {
-  const { goldAll, milkAll, claimMilk, claimGold } = useDataStore();
+  const { goldAll, milkAll, claimMilk } = useDataStore();
 
   const [shakeMilkIcon, setShakeMilkIcon] = useState(false);
   const [shakeGoldIcon, setShakeGoldIcon] = useState(false);
@@ -36,10 +36,9 @@ export default function HomeScreen() {
   };
   const onCloseRewardModal = () => {
     setIsShowReward(false);
+    setIsShowCombat(false);
   };
-  const onClaimRewardModal = (data: Record<'coin' | 'milk', number>) => {
-    claimGold(data.coin);
-    claimMilk(data.milk);
+  const onClaimRewardModal = () => {
     setIsShowReward(false);
     setIsShowCombat(false);
   };

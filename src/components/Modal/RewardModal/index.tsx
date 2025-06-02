@@ -1,6 +1,8 @@
-import CloseBtn from '../../../assets/object/close_button.png';
+import { useEffect } from 'react';
 import CoinIcon from '../../../assets/object/coin.png';
 import MilkIcon from '../../../assets/object/milk.png';
+import CloseBtn from '../../../assets/object/x_btn.png';
+import { useDataStore } from '../../../stores';
 import BaseModal from '../BaseModal';
 import './styles.scss';
 
@@ -9,8 +11,8 @@ interface IReavardModalProps {
   title?: string;
   contentText?: string;
   rewardData?: IRewardData[];
+  onClaim?: () => void;
   onClose?: () => void;
-  onClaim?: (data: Record<RewardType, number>) => void;
 }
 
 type RewardType = 'coin' | 'milk';
@@ -34,9 +36,11 @@ export default function RewardModal({
       quantity: 1,
     },
   ],
-  onClose,
   onClaim,
+  onClose,
 }: IReavardModalProps) {
+  const { claimMilk, claimGold } = useDataStore();
+
   const getIcon = (type: RewardType) => {
     switch (type) {
       case 'coin':
@@ -57,20 +61,26 @@ export default function RewardModal({
     );
   });
   const claim = () => {
-    const rewardObject: Record<RewardType, number> = rewardData.reduce(
-      (acc, item) => {
-        acc[item.type] = item.quantity;
-        return acc;
-      },
-      {} as Record<string, number>
-    );
-    onClaim && onClaim(rewardObject);
+    onClaim && onClaim();
   };
+  useEffect(() => {
+    if (isOpen) {
+      const rewardObject: Record<RewardType, number> = rewardData.reduce(
+        (acc, item) => {
+          acc[item.type] = item.quantity;
+          return acc;
+        },
+        {} as Record<string, number>
+      );
+      claimGold(rewardObject.coin);
+      claimMilk(rewardObject.milk);
+    }
+  }, [isOpen]);
   return (
     <BaseModal isOpen={isOpen}>
-      <div className='w-[70%] h-[50%] bg-[#F2D9A7] rounded-4xl border-2 border-[#4F1E0380]'>
+      <div className='w-[70vw] h-[50vh] bg-[#F2D9A7] rounded-4xl border-2 border-[#4F1E0380]'>
         <div className='w-full relative'>
-          <div className='uppercase py-3 text-2xl text-[#4F1E03]'>{title}</div>
+          <div className='uppercase py-[3%] text-2xl text-[#4F1E03]'>{title}</div>
           <div
             className='absolute right-[8%] top-0 left-0 bottom-0 flex items-center justify-end'
             onClick={onClose}
@@ -79,7 +89,7 @@ export default function RewardModal({
           </div>
         </div>
         <div className='custom-border'></div>
-        <div className='py-3'>
+        <div className='py-[3%]'>
           <p className='text-[#4F1E03] font-medium text-base'>{contentText}</p>
         </div>
         <div className='w-full h-[45%] flex items-center justify-center'>
@@ -87,9 +97,9 @@ export default function RewardModal({
             {rewardElm}
           </div>
         </div>
-        <div className='pt-4'>
+        <div className='pt-[5%]'>
           <button className='btn-claim' onClick={claim}>
-            <span>Claim</span>
+            <span>Great</span>
           </button>
         </div>
       </div>

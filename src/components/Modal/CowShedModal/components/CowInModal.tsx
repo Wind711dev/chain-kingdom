@@ -14,7 +14,6 @@ import './styles.scss';
 
 interface IProps {
   status: CowStatus | string; // 0: idle, 1: eating, 2: milking
-  milkHolding: number;
   milkHudRef: React.RefObject<HTMLDivElement | null>;
   isTooltipOpen?: boolean;
   dataCow?: IDataCow;
@@ -37,7 +36,6 @@ interface IDataCow {
 function CowInModal({
   status,
   milkHudRef,
-  milkHolding,
   isTooltipOpen,
   dataCow,
   disabled,
@@ -100,7 +98,7 @@ function CowInModal({
     };
 
     const icons: JSX.Element[] = [];
-    const numIcons = Math.ceil(milkHolding / 10);
+    const numIcons = Math.ceil((dataCow?.quantity ?? 60) / 10);
 
     let finishedCount = 0;
 

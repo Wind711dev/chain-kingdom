@@ -1,4 +1,4 @@
-// import { init } from '@telegram-apps/sdk-react';
+import { init } from '@telegram-apps/sdk-react';
 import { StrictMode } from 'react';
 import { isMobile } from 'react-device-detect';
 import { DndProvider } from 'react-dnd';
@@ -8,7 +8,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// init();
+init();
 // backButton.mount();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
