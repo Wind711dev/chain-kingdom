@@ -32,7 +32,7 @@ export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
         ? {
             ...plant,
             type: typeMap[name],
-            phase: 'seed' as const,
+            phase: 'sprout' as const,
           }
         : plant;
     });
@@ -55,19 +55,40 @@ export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
     setOpenTooltip(id);
   };
 
+  const treeHasGrown = (id: number, phase: PlantPhase) => {
+    setPlants((prevPlants) =>
+      prevPlants.map((plant) =>
+        plant.id === id && phase === 'sprout' ? { ...plant, phase: 'mature' } : plant
+      )
+    );
+  };
+
+  // useEffect(() => {
+  //   if (plants.length !== 0 && plants[1].phase === 'seed') {
+  //     setPlants((prevPlants) =>
+  //       prevPlants.map((plant, i) =>
+  //         i === 1 ? { ...plant, type: 'carrot', phase: 'sprout' } : plant
+  //       )
+  //     );
+  //   }
+  // }, [plants]);
+
   return (
-    <div className='farm-grid' onClick={onOpenPlantSeed}>
+    <div className='farm-grid'>
       {plants.map((plant) => (
         <FarmTile
           key={plant.id}
           plantRef={plantRef}
           plant={plant}
           onDrop={handleDrop}
+          onEndTime={(id, phase) => {
+            treeHasGrown(id, phase);
+          }}
           isTooltipOpen={
-            openTooltip === plant.id && plant.type !== 'none' && plant.phase === 'mature'
+            openTooltip === plant.id && plant.type !== 'none' && plant.phase === 'sprout'
           }
           onClick={() => {
-            onOpenPlantTooltip(plant.id);
+            plant.type === 'none' ? onOpenPlantSeed() : onOpenPlantTooltip(plant.id);
           }}
           onBuyFast={() => {}}
         />

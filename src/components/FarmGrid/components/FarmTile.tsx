@@ -16,12 +16,13 @@ import type { InternalPlantType, Plant, PlantPhase, typeMap } from './types';
 
 interface FarmTileProps {
   plant: Plant;
-  onDrop: (plantId: number, name: keyof typeof typeMap) => void;
   plantRef: React.RefObject<HTMLDivElement | null>;
   isTooltipOpen?: boolean;
   dataPlant?: IDataPlant;
+  onDrop: (plantId: number, name: keyof typeof typeMap) => void;
   onBuyFast?: () => void;
   onClick?: () => void;
+  onEndTime?: (id: number, phase: PlantPhase) => void;
 }
 interface IDataPlant {
   quantity?: number;
@@ -29,7 +30,13 @@ interface IDataPlant {
   cost?: number;
 }
 
-export default function FarmTile({ plant, isTooltipOpen, onDrop, onClick }: FarmTileProps) {
+export default function FarmTile({
+  plant,
+  isTooltipOpen,
+  onDrop,
+  onClick,
+  onEndTime,
+}: FarmTileProps) {
   const plantImages = useMemo(
     () => ({
       carrot: { seed: CarrotSeed, sprout: CarrotSprout, mature: CarrotMature },
@@ -67,11 +74,14 @@ export default function FarmTile({ plant, isTooltipOpen, onDrop, onClick }: Farm
     >
       <PlantTooltip
         key={plant.id}
-        handleEndTime={() => {}}
+        handleEndTime={() => {
+          onEndTime && onEndTime(plant.id, plant.phase);
+        }}
         isOpen={isTooltipOpen}
         onBuyFast={() => {}}
+        type={plant.type}
       >
-        <div onClick={onClick} className='relative'>
+        <div onClick={onClick} className='relative w-full h-full'>
           <img src={LandPlot} alt='land-plot' className='land-plot' />
           {plantImage && (
             <img src={plantImage} alt={`${plant.type}-${plant.phase}`} className='plant' />

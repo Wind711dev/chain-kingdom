@@ -2,9 +2,12 @@ import { Tooltip, type TooltipProps } from 'antd';
 
 import type { TooltipPlacement } from 'antd/es/tooltip';
 import { useEffect, useMemo, useState } from 'react';
+import CarrotIcon from '../../../assets/object/carrot.png';
 import ClockIcon from '../../../assets/object/clock_icon.png';
 import CoinIcon from '../../../assets/object/coin.png';
-import MilkIcon from '../../../assets/object/milk.png';
+import CornIcon from '../../../assets/object/corn.png';
+import PaddyIcon from '../../../assets/object/paddy.png';
+import type { InternalPlantType } from './types';
 
 interface IPlantTooltip {
   children: React.ReactNode;
@@ -14,18 +17,33 @@ interface IPlantTooltip {
   placement?: TooltipPlacement;
   onBuyFast?: () => void;
   handleEndTime: () => void;
+  type?: InternalPlantType;
 }
 interface IContentElm {
   quantity?: number;
   time?: number;
   cost?: number;
+  type?: InternalPlantType;
   onBuyFast?: () => void;
 }
-const ContentElm = ({ quantity, time, cost, onBuyFast }: IContentElm) => {
+const ContentElm = ({ quantity, time, cost, type, onBuyFast }: IContentElm) => {
+  const ImgPlant = useMemo(() => {
+    switch (type) {
+      case 'carrot':
+        return CarrotIcon;
+      case 'corn':
+        return CornIcon;
+      case 'paddy':
+        return PaddyIcon;
+
+      default:
+        break;
+    }
+  }, [type]);
   return (
     <div className='flex items-center justify-evenly h-full p-2 w-[30vw]'>
       <div className='flex h-full'>
-        <img src={MilkIcon} alt='Milk' className='w-6 h-6' />
+        <img src={ImgPlant} alt='ImgPlant' className='w-6 h-6' />
         <p className='text-[#7B3706] text-base font-bold'>{quantity}</p>
       </div>
       <div className='custom-border-v'></div>
@@ -51,6 +69,7 @@ export default function PlantTooltip({
   arrow = 'Show',
   isOpen,
   placement = 'bottom',
+  type,
   onBuyFast,
   handleEndTime,
 }: IPlantTooltip) {
@@ -105,6 +124,7 @@ export default function PlantTooltip({
           quantity={data.quantity}
           time={remainingTime}
           onBuyFast={onBuyFast}
+          type={type}
         />
       }
     >

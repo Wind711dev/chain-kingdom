@@ -7,7 +7,7 @@
   transform: rotate(45deg);
   .tile {
     width: 60%;
-    height: 50%;
+    // height: 50%;
     position: absolute;
     display: flex;
     align-items: center;
@@ -15,7 +15,7 @@
     .land-plot {
       transform: rotate(-45deg);
       width: 100%;
-      height: 60%;
+      // height: 60%;
       z-index: 2;
     }
     .plant {
@@ -23,25 +23,25 @@
       z-index: 3;
       width: 50%;
       transform: rotate(-45deg);
-      top: 20%;
-      left: 25%;
+      top: 15%;
+      left: 22%;
     }
   }
 
   .tile:nth-child(1) {
-    top: -7%;
-    left: 35%;
-  }
-  .tile:nth-child(2) {
     top: 0;
     left: 0;
   }
+  .tile:nth-child(2) {
+    top: -7%;
+    right: 0;
+  }
   .tile:nth-child(3) {
-    top: 28%;
-    left: 28%;
+    top: 30%;
+    left: 31%;
   }
   .tile:nth-child(4) {
-    top: 35%;
+    top: 38%;
     left: -7%;
   }
 }
