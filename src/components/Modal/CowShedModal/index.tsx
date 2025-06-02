@@ -26,7 +26,7 @@ export default function CowShedModal({
   handleCailm,
   milkHudRef,
 }: ICowShedModalProps) {
-  const { goldAll, milkHolding } = useDataStore();
+  const { goldAll, milkHolding, grass, cowShed } = useDataStore();
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [isTooltip, setIsTooltip] = useState(false);
@@ -99,6 +99,7 @@ export default function CowShedModal({
   );
 
   const handleFeedCow = (value: number) => {
+    cowShed(1);
     setCowArray((prev) => {
       const newCows = [...prev];
       newCows[value].status = CowStatus.EATING;
@@ -262,7 +263,7 @@ export default function CowShedModal({
                 className='w-[20vw] cursor-grab active:cursor-grabbing pointer-events-auto z-50'
               />
               <span className='absolute bg-[#FFE8B7] py-[0.5vw] px-[2vw] z-51 text-[3vw] bottom-[18%] right-[15%] rounded-sm text-[#7B3706] font-bold'>
-                10
+                {grass}
               </span>
             </div>
           </TooltipGrass>

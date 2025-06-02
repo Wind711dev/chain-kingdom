@@ -1,19 +1,15 @@
-import MainAvt from '../../../assets/object/main_avt.png';
+import BossAvt from '../../../assets/object/boss_avt.png';
 import RightMsgBg from '../../../assets/object/right_msg.png';
 import '../styles.scss';
 
 interface RightMsgProps {
   text?: string;
   onNext?: () => void;
-  onAttack?: () => void;
-  isAttack?: boolean;
 }
 
-export default function RightMsg({
+export default function MonsterMsg({
   text = 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
   onNext,
-  onAttack,
-  isAttack,
 }: RightMsgProps) {
   return (
     <div className='fixed bottom-0 right-0 left-0 top-0 z-50' onClick={onNext}>
@@ -28,17 +24,13 @@ export default function RightMsg({
             <div className='text-sm text-black text-left leading-tight whitespace-normal break-words px-4 py-[3%]'>
               {text}
             </div>
-            {isAttack && (
-              <button className='btn-next absolute bottom-[60%] right-[10%] z-50' onClick={onAttack}>
-                <span className='gradient-text'>Attack</span>
-              </button>
-            )}
           </div>
         </div>
 
         <div className='w-[20vw] h-[25vw] absolute right-[2vw] bottom-0 z-51'>
-          <img src={MainAvt} alt='Character' className='w-full h-full object-contain' />
+          <img src={BossAvt} alt='Character' className='w-full h-full object-contain' />
         </div>
+        <div className='absolute left-[30%] bottom-[5vh] z-51'>Click space to continue...</div>
       </div>
     </div>
   );

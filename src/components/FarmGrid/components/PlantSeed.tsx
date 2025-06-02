@@ -1,21 +1,26 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
-import Grass from '../../../assets/object/grass.png';
+import Carrot from '../../../assets/object/carrot.png';
+import Corn from '../../../assets/object/corn.png';
+import LeftArrow from '../../../assets/object/left_arrow.png';
+import Paddy from '../../../assets/object/paddy.png';
+import RightArrow from '../../../assets/object/right_arrow.png';
 import CarrotDragPreview from './CarrotDragPreview';
 import CornDragPreview from './CornDragPreview';
 import PaddyDragPreview from './PaddyDragPreview';
 
 interface PlantSeedProps {
   isOpen?: boolean;
+  onClose: () => void;
 }
 
 const seeds = [
-  { type: 'CARROT', name: 'Carrot' },
   { type: 'PADDY', name: 'Paddy' },
   { type: 'CORN', name: 'Corn' },
+  { type: 'CARROT', name: 'Carrot' },
 ];
 
-export default function PlantSeed({ isOpen = true }: PlantSeedProps) {
+export default function PlantSeed({ isOpen = true, onClose }: PlantSeedProps) {
   const refs = useRef<Record<string, HTMLImageElement | null>>({});
 
   const emptyImage = new Image();
@@ -25,48 +30,77 @@ export default function PlantSeed({ isOpen = true }: PlantSeedProps) {
   };
 
   const renderSeed = ({ type, name }: { type: string; name: string }) => {
-    const [{ opacity }, drag, dragPreview] = useDrag(() => ({
-      type, // Must be "CARROT", "PADDY", "CORN"
-      item: { name: type }, // not name: "Carrot", must match keyof typeMap
+    const [{ opacity, isDragging }, drag, dragPreview] = useDrag(() => ({
+      type,
+      item: { name: type },
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.5 : 1,
+        isDragging: monitor.isDragging(),
       }),
     }));
     useEffect(() => {
-      if (!isOpen) return;
       const ref = refs.current[type];
       if (ref) {
         drag(ref);
-        dragPreview(emptyImage);
       }
-    }, [isOpen, drag, dragPreview]);
+      dragPreview(emptyImage);
+    }, [drag, dragPreview]);
+
+    useEffect(() => {
+      if (isDragging) {
+        onClose();
+      }
+    }, [isDragging]);
+
+    const imgIcon = useMemo(() => {
+      switch (type) {
+        case 'CARROT':
+          return Carrot;
+        case 'PADDY':
+          return Paddy;
+
+        default:
+          return Corn;
+      }
+    }, [type]);
 
     return (
-      <div key={type}>
+      <div key={type} className='flex items-center justify-center w-[20%] h-full'>
         <img
           ref={getRefCallback(type)}
-          src={Grass}
+          src={imgIcon}
           alt={name}
           style={{ opacity }}
           onDragStart={() => console.log(`Dragging ${name}`)}
           onClick={() => console.log(`Clicked ${name}`)}
-          className='cursor-grab active:cursor-grabbing pointer-events-auto'
+          className='cursor-grab active:cursor-grabbing pointer-events-auto w-full h-full'
         />
       </div>
     );
   };
 
   return (
-    <div
-      style={{ display: isOpen ? 'flex' : 'none' }}
-      className='fixed z-[50] bottom-0 left-0 right-0 h-[30vh] justify-center items-start'
-    >
-      <div className='w-[70%] h-[30%] bg-black/50 flex items-start justify-evenly'>
-        {seeds.map(renderSeed)}
+    <>
+      <div
+        style={{ display: isOpen ? 'flex' : 'none' }}
+        className='fixed z-[50] bottom-0 left-0 right-0 h-[15vh] justify-center items-start'
+      >
+        <div className='w-[70%] h-[8vh] bg-black/50 flex items-center justify-evenly rounded-2xl'>
+          <div className='h-[50%]'>
+            <img src={LeftArrow} alt='' className='w-full h-full' />
+          </div>
+          {seeds.map(renderSeed)}
+          <div className='h-[50%]'>
+            <img src={RightArrow} alt='' className='w-full h-full' />
+          </div>
+        </div>
+        {/* <Carousel arrows infinite={false}>
+          {seeds.map(renderSeed)}
+        </Carousel> */}
       </div>
       <CarrotDragPreview />
       <CornDragPreview />
       <PaddyDragPreview />
-    </div>
+    </>
   );
 }

@@ -114,7 +114,9 @@ function CowInModal({
           key={i}
           start={{ x: start.x + offsetX, y: start.y + offsetY }}
           end={end}
-          setShakeIcon={() => {}} // chỉ shake 1 lần ở cuối
+          setShakeIcon={() => {
+            setShakeMilkIcon(true);
+          }}
           icon={MilkIcon}
           delay={delay}
           onComplete={() => {
@@ -122,7 +124,6 @@ function CowInModal({
             if (finishedCount === numIcons) {
               setFlyingMilk(false);
               setFlyingMilkIcons([]);
-              setShakeMilkIcon(true);
               handleCailm();
             }
           }}

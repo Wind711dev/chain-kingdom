@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import LeftMsg from './components/LeftMsg';
+import MainCharMsg from './components/MainCharMsg';
+import MonsterMsg from './components/MonsterMsg';
 import MonsterTeam from './components/MonsterTeam';
-import RightMsg from './components/RightMsg';
 
 const messages: {
   side: 'left' | 'right';
@@ -9,11 +9,6 @@ const messages: {
   isAttack?: boolean;
 }[] = [
   {
-    side: 'left',
-    text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
-    isAttack: false,
-  },
-  {
     side: 'right',
     text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
     isAttack: false,
@@ -25,6 +20,11 @@ const messages: {
   },
   {
     side: 'right',
+    text: 'Lorem ipsum dolor sit amet consectetur. Posuere blandit mauris tellus enim platea consequat nulla consequat.',
+    isAttack: false,
+  },
+  {
+    side: 'left',
     text: 'Do you want to hit it?',
     isAttack: true,
   },
@@ -62,8 +62,19 @@ export default function DefendComponent({ isShow, defendRef, showReward }: Monst
         setIsWin(true);
         showReward();
       }, 4000);
+      setTimeout(() => {
+        setIsAttack(false);
+        setIsWin(false);
+        setIndex(0);
+      }, 4500);
     }
   }, [isAttack]);
+
+  useEffect(() => {
+    if (isShow) {
+      setIsMsg(true);
+    }
+  }, [isShow]);
 
   return (
     <div style={{ display: isShow ? 'block' : 'none' }}>
@@ -76,14 +87,14 @@ export default function DefendComponent({ isShow, defendRef, showReward }: Monst
       />
       {isMsg &&
         (currentMessage.side === 'left' ? (
-          <LeftMsg text={currentMessage.text} onNext={handleNext} />
-        ) : (
-          <RightMsg
+          <MainCharMsg
             text={currentMessage.text}
             onNext={handleNext}
             isAttack={currentMessage.isAttack}
             onAttack={onClickAttack}
           />
+        ) : (
+          <MonsterMsg text={currentMessage.text} onNext={handleNext} />
         ))}
     </div>
   );

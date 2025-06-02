@@ -1,18 +1,18 @@
 .house-container {
   position: absolute;
-  top: 8vh;
-  left: 1vw;
+  top: 7vh;
+  left: 3vw;
   width: 75vw;
   height: auto;
   .house {
-    width: 40vw;
+    width: 35vw;
     height: auto;
   }
 
   .knight {
     position: absolute;
-    bottom: 5%;
-    left: 30%;
+    bottom: -25%;
+    left: 35%;
     width: 7%;
     transform: scaleX(-1);
   }

@@ -1,5 +1,5 @@
 import { useDragLayer } from 'react-dnd';
-import Grass from '../../../assets/object/grass.png';
+import Paddy from '../../../assets/object/paddy.png';
 
 const layerStyles: React.CSSProperties = {
   position: 'fixed',
@@ -38,7 +38,7 @@ export default function PaddyDragPreview() {
   return (
     <div style={layerStyles}>
       <div style={getItemStyles(initialOffset, currentOffset)}>
-        <img src={Grass} alt='Grass Preview' className='w-[15vw] drop-shadow-xl' />
+        <img src={Paddy} alt='Grass Preview' className='w-[15vw] drop-shadow-xl' />
       </div>
     </div>
   );

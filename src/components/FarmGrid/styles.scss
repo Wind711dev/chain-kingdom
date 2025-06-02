@@ -21,13 +21,15 @@
     .plant {
       position: absolute;
       z-index: 3;
-      width: 32%;
+      width: 50%;
       transform: rotate(-45deg);
+      top: 20%;
+      left: 20%;
     }
   }
 
   .tile:nth-child(1) {
-    top: -8%;
+    top: -7%;
     left: 30%;
   }
   .tile:nth-child(2) {
@@ -35,11 +37,11 @@
     left: 0;
   }
   .tile:nth-child(3) {
-    top: 20%;
-    left: 23%;
+    top: 22%;
+    left: 24%;
   }
   .tile:nth-child(4) {
     top: 29%;
-    left: -8%;
+    left: -7%;
   }
 }

@@ -12,22 +12,25 @@ interface IDataState {
   milkHolding: number;
   goldHoldTime: number;
   milkHoldTime: number;
+  grass: number;
   increaseLevel: () => void;
   claimGold: (gold: number) => void;
   claimMilk: (milk: number) => void;
   setGoldHolding: () => void;
   setMilkHolding: () => void;
+  cowShed: (grass: number) => void;
 }
 
 export const useDataStore = create<IDataState>()((set, get) => ({
   mainLevel: 1 as GuardLevel,
   cowLevel: 1,
-  goldAll: 0,
+  goldAll: 3000,
   milkAll: 0,
   goldHolding: 0,
   milkHolding: 120,
   goldHoldTime: 0,
   milkHoldTime: 0,
+  grass: 100,
   increaseLevel: () => {
     const currentLevel = get().mainLevel;
     const levelKeys = Object.keys(guardLevelData)
@@ -59,4 +62,8 @@ export const useDataStore = create<IDataState>()((set, get) => ({
     const nextMilk = milkLevelData[currentLevel].milkPerMinute + get().milkHolding;
     set((state) => ({ milkHolding: nextMilk, milkHoldTime: state.milkHoldTime + 1 }));
   },
+  cowShed: (grass: number) =>
+    set((state) => ({
+      grass: state.grass - grass,
+    })),
 }));

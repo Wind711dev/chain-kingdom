@@ -6,7 +6,7 @@ interface ICowShedProps {
 
 export default function Cowshed({ onClick }: ICowShedProps) {
   return (
-    <div className='absolute top-[40%] w-[30vw]' onClick={onClick}>
+    <div className='absolute top-[40%] w-[35vw]' onClick={onClick}>
       <img src={CowHouse} alt='CowHouse' className='w-full h-full' />
     </div>
   );
