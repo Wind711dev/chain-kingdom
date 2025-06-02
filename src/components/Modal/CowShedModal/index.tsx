@@ -26,7 +26,7 @@ export default function CowShedModal({
   handleCailm,
   milkHudRef,
 }: ICowShedModalProps) {
-  const { goldAll, milkHolding, grass, cowShed } = useDataStore();
+  const { goldAll, milkHolding, grass, cowPrice, cowShed, useGold } = useDataStore();
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [isTooltip, setIsTooltip] = useState(false);
@@ -34,20 +34,8 @@ export default function CowShedModal({
   const [disabledCows, setDisabledCows] = useState<boolean[]>([]);
   const [cowArray, setCowArray] = useState([
     {
-      status: CowStatus.MILKING,
-      quantity: 60,
-      time: 0,
-      cost: 0,
-    },
-    {
-      status: CowStatus.EATING,
-      quantity: 60,
-      time: 20,
-      cost: 3,
-    },
-    {
-      status: CowStatus.MILKING,
-      quantity: 60,
+      status: CowStatus.IDLE,
+      quantity: 0,
       time: 0,
       cost: 0,
     },
@@ -58,17 +46,29 @@ export default function CowShedModal({
       cost: 0,
     },
     {
-      status: CowStatus.MILKING,
-      quantity: 60,
+      status: CowStatus.IDLE,
+      quantity: 0,
       time: 0,
       cost: 0,
     },
     {
-      status: CowStatus.EATING,
-      quantity: 60,
-      time: 20,
-      cost: 3,
+      status: CowStatus.IDLE,
+      quantity: 0,
+      time: 0,
+      cost: 0,
     },
+    // {
+    //   status: CowStatus.IDLE,
+    //   quantity: 0,
+    //   time: 0,
+    //   cost: 0,
+    // },
+    // {
+    //   status: CowStatus.EATING,
+    //   quantity: 60,
+    //   time: 20,
+    //   cost: 3,
+    // },
   ]);
 
   const [{ opacity }, drag, dragPreview] = useDrag(() => ({
@@ -81,6 +81,7 @@ export default function CowShedModal({
   }));
 
   const onClickAddCow = () => {
+    useGold(cowPrice);
     setCowArray((prev) => [...prev, { status: CowStatus.IDLE, quantity: 0, time: 0, cost: 0 }]);
   };
   const onClickMilkHarvest = useCallback(
@@ -200,6 +201,7 @@ export default function CowShedModal({
           handleCailm={() => {}}
           handleEndTime={() => {}}
           milkHolding={milkHolding}
+          cowPrice={cowPrice}
         />
       );
     }

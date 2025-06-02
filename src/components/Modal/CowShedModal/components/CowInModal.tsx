@@ -14,17 +14,18 @@ import './styles.scss';
 
 interface IProps {
   status: CowStatus | string; // 0: idle, 1: eating, 2: milking
+  milkHolding: number;
+  milkHudRef: React.RefObject<HTMLDivElement | null>;
+  isTooltipOpen?: boolean;
+  dataCow?: IDataCow;
+  disabled?: boolean;
+  cowPrice?: number;
+  setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
+  onBuyFast?: () => void;
   onDrop: () => void;
   handleCailm: () => void;
   onClick: () => void;
   handleEndTime: () => void;
-  milkHolding: number;
-  milkHudRef: React.RefObject<HTMLDivElement | null>;
-  setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
-  isTooltipOpen?: boolean;
-  dataCow?: IDataCow;
-  disabled?: boolean;
-  onBuyFast?: () => void;
 }
 
 interface IDataCow {
@@ -35,16 +36,17 @@ interface IDataCow {
 
 function CowInModal({
   status,
-  onDrop,
   milkHudRef,
   milkHolding,
+  isTooltipOpen,
+  dataCow,
+  disabled,
+  cowPrice,
+  onDrop,
   handleCailm,
   setShakeMilkIcon,
   onClick,
-  isTooltipOpen,
-  dataCow,
   handleEndTime,
-  disabled,
   onBuyFast,
 }: IProps) {
   const [flyingMilk, setFlyingMilk] = useState(false);
@@ -174,7 +176,7 @@ function CowInModal({
         {status === CowStatus.ADD && (
           <div className='absolute flex items-center justify-center gap-1 bottom-[5%] left-0 right-0'>
             <img src={Coin} alt='Coin' className='w-[3vw]' />
-            <span className='gradient-text'>100</span>
+            <span className='gradient-text'>{cowPrice || 100}</span>
           </div>
         )}
       </div>
