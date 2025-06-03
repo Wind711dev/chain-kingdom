@@ -2,11 +2,11 @@
   width: 20vw;
   height: 20vw;
   position: absolute;
-  top: 35vh;
-  left: 35vw;
+  top: 32vh;
+  left: 37vw;
   transform: rotate(45deg);
   .tile {
-    width: 60%;
+    width: 100%;
     // height: 50%;
     position: absolute;
     display: flex;
@@ -21,10 +21,10 @@
     .plant {
       position: absolute;
       z-index: 3;
-      width: 50%;
+      width: 80%;
       transform: rotate(-45deg);
-      top: 15%;
-      left: 22%;
+      top: -10%;
+      left: 0%;
     }
   }
 
@@ -33,15 +33,15 @@
     left: 0;
   }
   .tile:nth-child(2) {
-    top: -7%;
-    right: 0;
+    top: -15%;
+    left: 62%;
   }
   .tile:nth-child(3) {
-    top: 30%;
-    left: 31%;
+    top: 48%;
+    left: 48%;
   }
   .tile:nth-child(4) {
-    top: 38%;
-    left: -7%;
+    top: 60%;
+    left: -13%;
   }
 }
