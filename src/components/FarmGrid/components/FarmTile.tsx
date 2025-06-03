@@ -1,4 +1,3 @@
-// components/FarmTile.tsx
 import { useEffect, useMemo } from 'react';
 import { useDrop } from 'react-dnd';
 import CarrotSeed from '../../../assets/object/carrot_1.png';
@@ -22,7 +21,7 @@ interface FarmTileProps {
   onDrop: (plantId: number, name: keyof typeof typeMap) => void;
   onBuyFast?: () => void;
   onClick?: () => void;
-  onEndTime?: (id: number, phase: PlantPhase) => void;
+  onEndTime: (id: number, phase: PlantPhase) => void;
 }
 interface IDataPlant {
   quantity?: number;
@@ -72,22 +71,22 @@ export default function FarmTile({
       ref={drop as unknown as React.Ref<HTMLDivElement>}
       className={`tile ${isOver ? 'hovered' : ''}`}
     >
-      <PlantTooltip
-        key={plant.id}
-        handleEndTime={() => {
-          onEndTime && onEndTime(plant.id, plant.phase);
-        }}
-        isOpen={isTooltipOpen}
-        onBuyFast={() => {}}
-        type={plant.type}
-      >
-        <div onClick={onClick} className='relative w-full h-full'>
-          <img src={LandPlot} alt='land-plot' className='land-plot' />
+      <div onClick={onClick} className='relative w-full h-full flex items-center'>
+        <img src={LandPlot} alt='land-plot' className='land-plot' />
+        <PlantTooltip
+          // key={plant.id}
+          handleEndTime={() => {
+            onEndTime(plant.id, plant.phase);
+          }}
+          isOpen={isTooltipOpen}
+          onBuyFast={() => {}}
+          type={plant.type}
+        >
           {plantImage && (
             <img src={plantImage} alt={`${plant.type}-${plant.phase}`} className='plant' />
           )}
-        </div>
-      </PlantTooltip>
+        </PlantTooltip>
+      </div>
     </div>
   );
 }

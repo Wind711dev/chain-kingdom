@@ -239,7 +239,7 @@ export default function CowShedModal({
       <BaseModal isOpen={isOpen}>
         <div className='w-full flex items-center flex-col'>
           <div className='w-[95vw] relative'>
-            <span className='text-[8vw] font-bold text-center block uppercase absolute w-full top-[8%]'>
+            <span className='text-[8vw] font-bold text-center block uppercase absolute w-full top-[8%] text-[#FFFFFF]'>
               CowShed
             </span>
             <img
@@ -258,9 +258,19 @@ export default function CowShedModal({
                 src={Grass}
                 alt='grass'
                 style={{ opacity }}
-                onDragStart={() => console.log('Dragging grass')}
+                onDragStart={(e) => {
+                  if (grass === 0) {
+                    e.preventDefault();
+                  } else {
+                    console.log('Dragging grass');
+                  }
+                }}
                 onClick={() => setIsTooltip(!isTooltip)}
-                className='w-[20vw] cursor-grab active:cursor-grabbing pointer-events-auto z-50'
+                className={`w-[20vw] z-50 ${
+                  grass === 0
+                    ? 'cursor-default pointer-events-none opacity-50'
+                    : 'cursor-grab active:cursor-grabbing pointer-events-auto'
+                }`}
               />
               <span className='absolute bg-[#FFE8B7] py-[0.5vw] px-[2vw] z-51 text-[3vw] bottom-[18%] right-[15%] rounded-sm text-[#7B3706] font-bold'>
                 {grass}

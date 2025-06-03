@@ -1,7 +1,7 @@
 .hud {
   position: fixed;
   top: 10px;
-  left: 0;
+  right: 2%;
   display: flex;
   justify-content: end;
   gap: 15px;
@@ -19,10 +19,13 @@
     gap: 2px;
     width: 15vw;
     height: 15vw;
-    background-image: url('../../assets/object/hub_bg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: linear-gradient(321.34deg, #0a3c04 2.78%, #164b0b 92.26%);
+    box-shadow: -1px 1px 0px 2.5px #052400;
+    border-radius: 8px;
+    // background-image: url('../../assets/object/hub_bg.png');
+    // background-size: cover;
+    // background-position: center;
+    // background-repeat: no-repeat;
 
     .gradient-text {
       background: linear-gradient(to bottom, #efc312, #cf9506);

@@ -89,7 +89,6 @@ export default function PlantTooltip({
   }, [arrow]);
 
   useEffect(() => {
-    // if (!isOpen) return;
     if (remainingTime === undefined) return;
     if (remainingTime <= 0) {
       handleEndTime();

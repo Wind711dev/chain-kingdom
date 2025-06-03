@@ -6,13 +6,17 @@ import { typeMap } from './components/types';
 import './styles.scss';
 
 interface FarmGridProps {
+  isOpenTooltip: number | null;
   openPlantSeed?: () => void;
-  // onOpenTooltip: () => void;
+  onOpenPlantTooltip: (id: number) => void;
 }
 
-export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
+export default function FarmGrid({
+  isOpenTooltip,
+  openPlantSeed,
+  onOpenPlantTooltip,
+}: FarmGridProps) {
   const plantRef = useRef<HTMLDivElement>(null);
-  const [openTooltip, setOpenTooltip] = useState<number | null>(null);
 
   const [plants, setPlants] = useState<Plant[]>(
     Array.from({ length: 4 }).map((_, i) => ({
@@ -47,14 +51,6 @@ export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
     }
   };
 
-  const onOpenPlantTooltip = (id: number) => {
-    if (openTooltip === id) {
-      setOpenTooltip(null);
-      return;
-    }
-    setOpenTooltip(id);
-  };
-
   const treeHasGrown = (id: number, phase: PlantPhase) => {
     setPlants((prevPlants) =>
       prevPlants.map((plant) =>
@@ -85,7 +81,7 @@ export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
             treeHasGrown(id, phase);
           }}
           isTooltipOpen={
-            openTooltip === plant.id && plant.type !== 'none' && plant.phase === 'sprout'
+            isOpenTooltip === plant.id && plant.type !== 'none' && plant.phase === 'sprout'
           }
           onClick={() => {
             plant.type === 'none' ? onOpenPlantSeed() : onOpenPlantTooltip(plant.id);

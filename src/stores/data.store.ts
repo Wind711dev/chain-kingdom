@@ -26,7 +26,7 @@ export const useDataStore = create<IDataState>()((set, get) => ({
   milkAll: 0,
   milkHolding: 120,
   milkHoldTime: 0,
-  grass: 100,
+  grass: 20,
   cowPrice: 500,
   claimGold: (gold) =>
     set((state) => ({

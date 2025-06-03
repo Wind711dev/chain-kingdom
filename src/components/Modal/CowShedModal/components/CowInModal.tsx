@@ -174,7 +174,7 @@ function CowInModal({
         {status === CowStatus.ADD && (
           <div className='absolute flex items-center justify-center gap-1 bottom-[5%] left-0 right-0'>
             <img src={Coin} alt='Coin' className='w-[3vw]' />
-            <span className='gradient-text'>{cowPrice || 100}</span>
+            <span className='gradient-text'>{cowPrice || 0}</span>
           </div>
         )}
       </div>

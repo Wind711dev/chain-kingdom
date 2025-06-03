@@ -1,13 +1,12 @@
 .farm-grid {
-  width: 20vw;
-  height: 20vw;
+  width: 35vw;
+  height: 35vw;
   position: absolute;
-  top: 32vh;
-  left: 37vw;
+  top: 30vh;
+  left: 35vw;
   transform: rotate(45deg);
   .tile {
-    width: 100%;
-    // height: 50%;
+    width: 60%;
     position: absolute;
     display: flex;
     align-items: center;
@@ -15,7 +14,6 @@
     .land-plot {
       transform: rotate(-45deg);
       width: 100%;
-      // height: 60%;
       z-index: 2;
     }
     .plant {
@@ -23,25 +21,25 @@
       z-index: 3;
       width: 80%;
       transform: rotate(-45deg);
-      top: -10%;
+      top: -12%;
       left: 0%;
     }
   }
 
   .tile:nth-child(1) {
-    top: 0;
-    left: 0;
+    top: 10%;
+    left: 5%;
   }
   .tile:nth-child(2) {
-    top: -15%;
-    left: 62%;
+    top: 0%;
+    left: 44%;
   }
   .tile:nth-child(3) {
-    top: 48%;
-    left: 48%;
+    top: 40%;
+    left: 36%;
   }
   .tile:nth-child(4) {
-    top: 60%;
-    left: -13%;
+    top: 49%;
+    left: -4%;
   }
 }
