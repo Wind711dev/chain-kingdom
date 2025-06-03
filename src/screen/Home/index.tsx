@@ -7,6 +7,7 @@ import PlantSeed from '../../components/FarmGrid/components/PlantSeed';
 import HouseWithKnight from '../../components/HouseKnight';
 import HUDComponent from '../../components/Hub';
 import { CowShedModal } from '../../components/Modal';
+import MissonModal from '../../components/Modal/MissonModal';
 import RewardModal from '../../components/Modal/RewardModal';
 import Warehouse from '../../components/Warehouse';
 import { useDataStore } from '../../stores/data.store';
@@ -102,6 +103,7 @@ export default function HomeScreen() {
         onClose={onCloseRewardModal}
         onClaim={onClaimRewardModal}
       />
+      <MissonModal isOpen={false} />
       <Background overflowHidden={isCowShedOpen} onClick={onClickBackgound}>
         <HouseWithKnight
           houseRef={houseRef}
