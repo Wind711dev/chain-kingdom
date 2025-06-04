@@ -5,7 +5,7 @@ interface IFarmStore {
   setFarmTooltip: (value: number | null) => void;
 }
 
-export const useFarmStore = create<IFarmStore>()((set, get) => ({
+export const useFarmStore = create<IFarmStore>()((set) => ({
   farmTooltip: null,
   setFarmTooltip: (value) =>
     set(() => ({
