@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import CarrotSeed from '../../../assets/object/carrot_1.png';
 import CarrotSprout from '../../../assets/object/carrot_2.png';
@@ -11,7 +11,7 @@ import PaddySeed from '../../../assets/object/paddy_1.png';
 import PaddySprout from '../../../assets/object/paddy_2.png';
 import PaddyMature from '../../../assets/object/paddy_3.png';
 import PlantTooltip from './PlantTooltip';
-import type { InternalPlantType, Plant, PlantPhase, typeMap } from './types';
+import { typeMap, type InternalPlantType, type Plant, type PlantPhase } from './types';
 
 interface FarmTileProps {
   plant: Plant;
@@ -29,23 +29,14 @@ interface IDataPlant {
   cost?: number;
 }
 
-export default function FarmTile({
-  plant,
-  isTooltipOpen,
-  onDrop,
-  onClick,
-  onEndTime,
-}: FarmTileProps) {
-  const plantImages = useMemo(
-    () => ({
-      carrot: { seed: CarrotSeed, sprout: CarrotSprout, mature: CarrotMature },
-      paddy: { seed: PaddySeed, sprout: PaddySprout, mature: PaddyMature },
-      corn: { seed: CornSeed, sprout: CornSprout, mature: CornMature },
-      none: { seed: '', sprout: '', mature: '' },
-    }),
-    []
-  );
+const plantImages = {
+  carrot: { seed: CarrotSeed, sprout: CarrotSprout, mature: CarrotMature },
+  paddy: { seed: PaddySeed, sprout: PaddySprout, mature: PaddyMature },
+  corn: { seed: CornSeed, sprout: CornSprout, mature: CornMature },
+  none: { seed: '', sprout: '', mature: '' },
+};
 
+function FarmTile({ plant, isTooltipOpen, dataPlant, onDrop, onClick, onEndTime }: FarmTileProps) {
   const getPlantImage = (plantType: InternalPlantType, phase: PlantPhase): string => {
     return plantImages[plantType][phase];
   };
@@ -60,12 +51,14 @@ export default function FarmTile({
     }),
   }));
 
-  const plantImage = getPlantImage(plant.type, plant.phase);
   useEffect(() => {
-    if (canDrop && isOver && draggedItem) {
+    if (canDrop && isOver && draggedItem && draggedItem.name && draggedItem.name in typeMap) {
       onDrop(plant.id, draggedItem.name);
     }
-  }, [canDrop, isOver, draggedItem, onDrop]);
+  }, [canDrop, isOver, draggedItem, onDrop, plant.id]);
+
+  const plantImage = getPlantImage(plant.type, plant.phase);
+
   return (
     <div
       ref={drop as unknown as React.Ref<HTMLDivElement>}
@@ -74,10 +67,8 @@ export default function FarmTile({
       <div onClick={onClick} className='relative w-full h-full flex items-center'>
         <img src={LandPlot} alt='land-plot' className='land-plot' />
         <PlantTooltip
-          // key={plant.id}
-          handleEndTime={() => {
-            onEndTime(plant.id, plant.phase);
-          }}
+          data={dataPlant}
+          handleEndTime={() => onEndTime(plant.id, plant.phase)}
           isOpen={isTooltipOpen}
           onBuyFast={() => {}}
           type={plant.type}
@@ -90,3 +81,17 @@ export default function FarmTile({
     </div>
   );
 }
+
+function areEqual(prevProps: FarmTileProps, nextProps: FarmTileProps) {
+  return (
+    prevProps.plant.id === nextProps.plant.id &&
+    prevProps.plant.phase === nextProps.plant.phase &&
+    prevProps.plant.type === nextProps.plant.type &&
+    prevProps.isTooltipOpen === nextProps.isTooltipOpen &&
+    prevProps.onDrop === nextProps.onDrop &&
+    prevProps.onClick === nextProps.onClick &&
+    prevProps.onEndTime === nextProps.onEndTime
+  );
+}
+
+export default React.memo(FarmTile, areEqual);

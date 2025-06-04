@@ -11,9 +11,11 @@ import MissonModal from '../../components/Modal/MissonModal';
 import RewardModal from '../../components/Modal/RewardModal';
 import Warehouse from '../../components/Warehouse';
 import { useDataStore } from '../../stores/data.store';
+import { useFarmStore } from '../../stores/farm.store';
 
 export default function HomeScreen() {
   const { goldAll, milkAll, claimMilk } = useDataStore();
+  const { farmTooltip, setFarmTooltip } = useFarmStore();
 
   const [shakeMilkIcon, setShakeMilkIcon] = useState(false);
   const [shakeGoldIcon, setShakeGoldIcon] = useState(false);
@@ -22,7 +24,6 @@ export default function HomeScreen() {
   const [isPlantSeedOpen, setIsPlantSeedOpen] = useState(false);
   const [isShowCombat, setIsShowCombat] = useState(false);
   const [isShowReward, setIsShowReward] = useState(false);
-  const [openTooltipFarm, setOpenTooltipFarm] = useState<number | null>(null);
 
   const milkHudRef = useRef<HTMLDivElement>(null);
   const goldHudRef = useRef<HTMLDivElement>(null);
@@ -48,14 +49,6 @@ export default function HomeScreen() {
     setIsPlantSeedOpen(false);
   };
 
-  const onOpenPlantTooltip = (id: number) => {
-    if (openTooltipFarm === id) {
-      setOpenTooltipFarm(null);
-      return;
-    }
-    setOpenTooltipFarm(id);
-  };
-
   const onStartCombat = () => {
     setIsShowCombat(true);
     // setTimeout(() => {
@@ -73,8 +66,8 @@ export default function HomeScreen() {
     if (isPlantSeedOpen) {
       closePlantSeed();
     }
-    if (openTooltipFarm) {
-      setOpenTooltipFarm(null);
+    if (farmTooltip) {
+      setFarmTooltip(null);
     }
   };
 
@@ -118,15 +111,12 @@ export default function HomeScreen() {
           openPlantSeed={() => {
             setIsPlantSeedOpen(!isPlantSeedOpen);
           }}
-          isOpenTooltip={openTooltipFarm}
-          onOpenPlantTooltip={onOpenPlantTooltip}
         />
         <DefendComponent
           isShow={isShowCombat}
           defendRef={defendRef}
           showReward={onShowRewardModal}
         />
-        {/* {flyingGoldIcons} */}
         {/* <Tree className='bottom-10' /> */}
       </Background>
     </>

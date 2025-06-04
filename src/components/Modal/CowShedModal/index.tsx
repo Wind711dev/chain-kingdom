@@ -207,7 +207,9 @@ export default function CowShedModal({
     return cows;
   }, [
     cowArray,
+    cowPrice,
     hoveredCow,
+    disabledCows,
     milkHudRef,
     handleEndTime,
     onClickCowEat,

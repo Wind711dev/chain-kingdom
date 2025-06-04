@@ -88,20 +88,21 @@ export default function PlantTooltip({
     };
   }, [arrow]);
 
+  // useEffect(() => {
+  //   if (remainingTime === undefined && data.time !== undefined) {
+  //     setRemainingTime(data.time);
+  //   }
+  // }, [data.time]);
+
   useEffect(() => {
-    if (remainingTime === undefined) return;
-    if (remainingTime <= 0) {
-      handleEndTime();
+    if (type === 'none' || remainingTime === undefined) {
       return;
     }
 
     const interval = setInterval(() => {
       setRemainingTime((prev) => {
-        if (prev === undefined) {
-          clearInterval(interval);
-          return 0;
-        }
-        if (prev <= 1) {
+        if (prev === undefined || prev <= 1) {
+          handleEndTime();
           clearInterval(interval);
           return 0;
         }
@@ -110,7 +111,7 @@ export default function PlantTooltip({
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingTime]);
+  }, [remainingTime, type]);
 
   return (
     <Tooltip

@@ -13,4 +13,7 @@ export interface Plant {
   id: number;
   type: InternalPlantType;
   phase: PlantPhase;
+  quantity: number
+  time: number
+  cost: number
 }
