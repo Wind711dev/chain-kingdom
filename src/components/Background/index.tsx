@@ -9,7 +9,7 @@ interface IBackgroundProps {
 
 export default function Background({ children, overflowHidden, onClick }: IBackgroundProps) {
   return (
-    <div className='background-container' style={{ overflow: overflowHidden ? 'hidden' : 'auto' }}>
+    <div className='background-container diamond-grid-bg' style={{ overflow: overflowHidden ? 'hidden' : 'auto' }}>
       <div className='h-[300%] w-[300%]' onClick={onClick}>
         {children}
       </div>

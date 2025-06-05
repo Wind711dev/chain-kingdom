@@ -37,6 +37,7 @@ const mockup = [
     giftType: 'string',
     total: 1,
     missionCount: 1,
+    isCompleted: true,
   },
   {
     id: 4,
@@ -61,6 +62,7 @@ const mockup = [
     giftType: 'string',
     total: 1,
     missionCount: 1,
+    isCompleted: true,
   },
   {
     id: 7,
@@ -121,7 +123,7 @@ export default function MissonModal({ isOpen, title = 'Mission', onClose }: IPro
           </div>
           <div className='w-full h-[85%] pt-[4%] flex flex-col items-center flex-grow overflow-hidden'>
             <Tab tab={tab} onChangeTab={onChangeTab} />
-            <MissonMap missionData={mockup} />
+            <MissonMap missionData={mockup} tab={tab} />
           </div>
         </div>
       </div>
