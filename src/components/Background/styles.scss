@@ -29,4 +29,11 @@
   //   position: relative;
   //   z-index: 1;
   // }
+  .diamond {
+    width: 60px;
+    height: 60px;
+    background: lightblue;
+    transform: rotate(45deg);
+    position: absolute;
+  }
 }
