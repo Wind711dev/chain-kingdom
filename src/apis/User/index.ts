@@ -1,4 +1,4 @@
-import { axiosAuthInstance } from '../axiosInstance';
+import { apiGet } from '../apiService';
 import type { UserResponse } from './types';
 
 enum Path {
@@ -6,5 +6,5 @@ enum Path {
 }
 
 export const fetchGetUseProfile = () => {
-  return axiosAuthInstance.get<UserResponse>(`${Path.GetProfile}`);
+  return apiGet<UserResponse>(`${Path.GetProfile}`);
 };

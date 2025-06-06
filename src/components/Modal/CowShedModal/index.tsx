@@ -4,6 +4,7 @@ import { useDrag } from 'react-dnd';
 import CowShed from '../../../assets/object/cow_shed_modal.png';
 import Grass from '../../../assets/object/grass.png';
 import XButton from '../../../assets/object/x_btn.png';
+import { useAnimalInstance, useAnimalShelter } from '../../../hooks';
 import { useDataStore } from '../../../stores';
 import BaseModal from '../BaseModal';
 import CowInModal from './components/CowInModal';
@@ -19,6 +20,8 @@ interface ICowShedModalProps {
   milkHudRef: React.RefObject<HTMLDivElement | null>;
 }
 
+const shedName = 'cowshed';
+
 export default function CowShedModal({
   isOpen,
   onClose,
@@ -27,6 +30,8 @@ export default function CowShedModal({
   milkHudRef,
 }: ICowShedModalProps) {
   const { goldAll, grass, cowPrice, cowShed, useGold } = useDataStore();
+  const { handleGetShelter } = useAnimalShelter();
+  const { handleCreateAnimalInShelter } = useAnimalInstance();
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [isTooltip, setIsTooltip] = useState(false);
@@ -80,10 +85,11 @@ export default function CowShedModal({
     }),
   }));
 
-  const onClickAddCow = () => {
+  const onClickAddCow = useCallback(() => {
+    handleCreateAnimalInShelter();
     useGold(cowPrice);
     setCowArray((prev) => [...prev, { status: CowStatus.IDLE, quantity: 0, time: 0, cost: 0 }]);
-  };
+  }, [handleCreateAnimalInShelter, useGold, setCowArray, cowPrice]);
   const onClickMilkHarvest = useCallback(
     (value: number) => {
       handleCailm(cowArray[value].quantity);
@@ -195,8 +201,8 @@ export default function CowShedModal({
           key={'add'}
           status={CowStatus.ADD}
           milkHudRef={milkHudRef}
-          onClick={onClickAddCow}
           onDrop={() => {}}
+          onClick={onClickAddCow}
           setShakeMilkIcon={setShakeMilkIcon}
           handleCailm={() => {}}
           handleEndTime={() => {}}
@@ -215,7 +221,12 @@ export default function CowShedModal({
     onClickCowEat,
     onClickMilkHarvest,
     onBuyFast,
+    onClickAddCow,
   ]);
+
+  const getDataShed = useCallback(async () => {
+    await handleGetShelter(shedName);
+  }, []);
 
   useEffect(() => {
     setDisabledCows(new Array(cowArray.length).fill(false));
@@ -224,6 +235,8 @@ export default function CowShedModal({
     if (!isOpen) {
       setIsTooltip(false);
       setHoveredCow(null);
+    } else {
+      getDataShed();
     }
   }, [isOpen]);
 

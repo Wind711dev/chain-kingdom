@@ -9,7 +9,7 @@ enum Path {
   Feed = '/api/v1/animal/feed/{id}',
 }
 
-export const fetchCreateAnimalInShelter = (ushelter_id: number) => {
+export const fetchCreateAnimalInShelter = (ushelter_id: string) => {
   return axiosAuthInstance.post<AnimalInShelter>(
     `${Path.CreateAnimalInShelter}/${ushelter_id}/animal`
   );

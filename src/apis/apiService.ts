@@ -12,7 +12,10 @@ export const apiGet = async <T>(
   url: string,
   auth: boolean = true,
   params?: Record<string, any>
-): Promise<T> => {
+): Promise<{
+  responseData: T;
+  status: number;
+}> => {
   try {
     const config = {
       params,
@@ -20,7 +23,11 @@ export const apiGet = async <T>(
     const response = auth
       ? await axiosAuthInstance.get<T>(url, config)
       : await axiosNoAuthInstance.get<T>(url, config);
-    return response.data;
+
+    return {
+      responseData: response.data,
+      status: response.status,
+    };
   } catch (error: any) {
     throw error.response?.data || error.message;
   }
@@ -32,7 +39,10 @@ export const apiPost = async <T>(
   data: any,
   auth: boolean = true,
   params?: Record<string, any>
-): Promise<T> => {
+): Promise<{
+  responseData: T;
+  status: number;
+}> => {
   try {
     const config = {
       params,
@@ -49,7 +59,10 @@ export const apiPost = async <T>(
       ? await axiosAuthInstance.post<T>(url, data, config)
       : await axiosNoAuthInstance.post<T>(url, data, config);
     console.log('apiPost response', response);
-    return response?.data;
+    return {
+      responseData: response.data,
+      status: response.status,
+    };
   } catch (error: any) {
     throw error.response?.data || error.message;
   }
@@ -76,11 +89,7 @@ export const apiPut = async <T>(
 };
 
 // ✅ PATCH request
-export const apiPatch = async <T>(
-  url: string,
-  data: any,
-  auth: boolean = true
-): Promise<T> => {
+export const apiPatch = async <T>(url: string, data: any, auth: boolean = true): Promise<T> => {
   try {
     const response = auth
       ? await axiosAuthInstance.patch<T>(url, data)

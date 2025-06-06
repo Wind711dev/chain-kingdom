@@ -67,6 +67,6 @@ export interface AnimalShelter {
   id: string;
   pos_x: number;
   pos_y: number;
-  shelterInfo: ShelterInfo;
+  info: ShelterInfo;
   updated_at: string;
 }

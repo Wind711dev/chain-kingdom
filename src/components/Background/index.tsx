@@ -1,6 +1,6 @@
 import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useProfile } from '../../hooks';
+import { useCallback, useEffect, useState } from 'react';
+import { useAnimalShelter, useProfile } from '../../hooks';
 import DiamondHoneycombGrid from './Gird';
 import './styles.scss';
 
@@ -23,14 +23,25 @@ export default function Background({
   onClick,
 }: IBackgroundProps) {
   const { getUseProfile } = useProfile();
+  const { handleGetAllAnimalShelter, handleGetShelterTypes } = useAnimalShelter();
 
   const [coordinates, _setCoordinates] = useState<ICoordinates>({
     top: 0,
     left: 0,
   });
+
+  const setupShelter = useCallback(async () => {
+    await handleGetAllAnimalShelter();
+    await handleGetShelterTypes();
+  }, [handleGetAllAnimalShelter, handleGetShelterTypes]);
+
   useEffect(() => {
     getUseProfile();
   }, [getUseProfile]);
+  useEffect(() => {
+    setupShelter();
+  }, [setupShelter]);
+
   return (
     <div
       className='background-container diamond-grid-bg'

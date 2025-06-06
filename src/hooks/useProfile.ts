@@ -8,7 +8,7 @@ export const useProfile = () => {
     try {
       const res = await fetchGetUseProfile();
       if (res.status === 200) {
-        setUserData(res.data.data)
+        setUserData(res.responseData.data);
       } else {
         throw new Error('error');
       }

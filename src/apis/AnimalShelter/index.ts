@@ -1,18 +1,22 @@
-import { axiosAuthInstance } from '../axiosInstance';
-import type { AnimalShelter } from './types';
+import { apiGet, apiPost } from '../apiService';
+import type { AnimalShelter, ShelterInfo } from './types';
 
 enum Path {
   GetAllAnimalShelter = '/api/v1/user/animal-shelter',
   CreateAnimalShelter = '/api/v1/user/animal-shelter',
   GetShelter = '/api/v1/user/animal-shelter',
+  GetShelterTypes = '/api/v1/animal-shelter/types',
 }
 
 export const fetchGetAllAnimalShelter = () => {
-  return axiosAuthInstance.get<AnimalShelter[]>(`${Path.GetAllAnimalShelter}`);
+  return apiGet<{ data: AnimalShelter[] }>(`${Path.GetAllAnimalShelter}`);
 };
 export const fetchCreateAnimalShelter = (id: number) => {
-  return axiosAuthInstance.post<AnimalShelter>(`${Path.GetShelter}/${id}`);
+  return apiPost<{ data: AnimalShelter }>(`${Path.CreateAnimalShelter}`, { shelter_id: id });
 };
-export const fetchGetShelter = () => {
-  return axiosAuthInstance.get<AnimalShelter>(`${Path.CreateAnimalShelter}`);
+export const fetchGetShelter = (id: string) => {
+  return apiGet<{ data: AnimalShelter }>(`${Path.GetShelter}/${id}`);
+};
+export const fetchGetShelterTypes = () => {
+  return apiGet<{ data: ShelterInfo[] }>(`${Path.GetShelterTypes}`);
 };
