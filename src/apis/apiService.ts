@@ -1,25 +1,25 @@
 import { axiosAuthInstance, axiosNoAuthInstance } from './axiosInstance';
 
 // Định nghĩa kiểu dữ liệu cho API Response
-export interface ApiResponse<T> {
-  code: number;
-  message: string;
-  result: T;
-}
+// export interface T {
+//   code: number;
+//   message: string;
+//   result: T;
+// }
 
 // ✅ GET request
 export const apiGet = async <T>(
   url: string,
   auth: boolean = true,
   params?: Record<string, any>
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   try {
     const config = {
       params,
     };
     const response = auth
-      ? await axiosAuthInstance.get<ApiResponse<T>>(url, config)
-      : await axiosNoAuthInstance.get<ApiResponse<T>>(url, config);
+      ? await axiosAuthInstance.get<T>(url, config)
+      : await axiosNoAuthInstance.get<T>(url, config);
     return response.data;
   } catch (error: any) {
     throw error.response?.data || error.message;
@@ -32,7 +32,7 @@ export const apiPost = async <T>(
   data: any,
   auth: boolean = true,
   params?: Record<string, any>
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   try {
     const config = {
       params,
@@ -46,8 +46,8 @@ export const apiPost = async <T>(
 
     console.log('apiPost data', data);
     const response = auth
-      ? await axiosAuthInstance.post<ApiResponse<T>>(url, data, config)
-      : await axiosNoAuthInstance.post<ApiResponse<T>>(url, data, config);
+      ? await axiosAuthInstance.post<T>(url, data, config)
+      : await axiosNoAuthInstance.post<T>(url, data, config);
     console.log('apiPost response', response);
     return response?.data;
   } catch (error: any) {
@@ -61,14 +61,14 @@ export const apiPut = async <T>(
   data: any,
   auth: boolean = true,
   params?: Record<string, any>
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   try {
     const config = {
       params,
     };
     const response = auth
-      ? await axiosAuthInstance.put<ApiResponse<T>>(url, data, config)
-      : await axiosNoAuthInstance.put<ApiResponse<T>>(url, data, config);
+      ? await axiosAuthInstance.put<T>(url, data, config)
+      : await axiosNoAuthInstance.put<T>(url, data, config);
     return response.data;
   } catch (error: any) {
     throw error.response?.data || error.message;
@@ -80,11 +80,11 @@ export const apiPatch = async <T>(
   url: string,
   data: any,
   auth: boolean = true
-): Promise<ApiResponse<T>> => {
+): Promise<T> => {
   try {
     const response = auth
-      ? await axiosAuthInstance.patch<ApiResponse<T>>(url, data)
-      : await axiosNoAuthInstance.patch<ApiResponse<T>>(url, data);
+      ? await axiosAuthInstance.patch<T>(url, data)
+      : await axiosNoAuthInstance.patch<T>(url, data);
     return response.data;
   } catch (error: any) {
     throw error.response?.data || error.message;
@@ -92,11 +92,11 @@ export const apiPatch = async <T>(
 };
 
 // ✅ DELETE request
-export const apiDelete = async <T>(url: string, auth: boolean = true): Promise<ApiResponse<T>> => {
+export const apiDelete = async <T>(url: string, auth: boolean = true): Promise<T> => {
   try {
     const response = auth
-      ? await axiosAuthInstance.delete<ApiResponse<T>>(url)
-      : await axiosNoAuthInstance.delete<ApiResponse<T>>(url);
+      ? await axiosAuthInstance.delete<T>(url)
+      : await axiosNoAuthInstance.delete<T>(url);
     return response.data;
   } catch (error: any) {
     throw error.response?.data || error.message;

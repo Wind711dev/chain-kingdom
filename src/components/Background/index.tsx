@@ -1,5 +1,6 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useProfile } from '../../hooks';
 import DiamondHoneycombGrid from './Gird';
 import './styles.scss';
 
@@ -21,10 +22,15 @@ export default function Background({
   showGrid = false,
   onClick,
 }: IBackgroundProps) {
+  const { getUseProfile } = useProfile();
+
   const [coordinates, _setCoordinates] = useState<ICoordinates>({
     top: 0,
     left: 0,
   });
+  useEffect(() => {
+    getUseProfile();
+  }, [getUseProfile]);
   return (
     <div
       className='background-container diamond-grid-bg'
