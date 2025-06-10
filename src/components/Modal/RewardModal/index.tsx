@@ -58,17 +58,17 @@ export default function RewardModal({
     onClaim && onClaim();
   };
   useEffect(() => {
-    if (isOpen) {
-      const rewardObject: Record<RewardType, number> = itemReward.reduce(
-        (acc, item) => {
-          acc[item.type] = item.total;
-          return acc;
-        },
-        {} as Record<string, number>
-      );
-      // claimGold(rewardObject.coin);
-      // claimMilk(rewardObject.milk);
-    }
+    // if (isOpen) {
+    //   const rewardObject: Record<RewardType, number> = itemReward.reduce(
+    //     (acc, item) => {
+    //       acc[item.type] = item.total;
+    //       return acc;
+    //     },
+    //     {} as Record<string, number>
+    //   );
+    //   // claimGold(rewardObject.coin);
+    //   // claimMilk(rewardObject.milk);
+    // }
   }, [isOpen]);
   return (
     <BaseModal isOpen={isOpen}>

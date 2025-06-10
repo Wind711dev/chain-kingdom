@@ -15,7 +15,7 @@ import { useDataStore } from '../../stores/data.store';
 import { useFarmStore } from '../../stores/farm.store';
 
 export default function HomeScreen() {
-  const { goldAll, milkAll, claimMilk } = useDataStore();
+  const { goldAll, milkAll } = useDataStore();
   const { farmTooltip, setFarmTooltip } = useFarmStore();
   const { handleFightingMatch } = useFightingMatch();
 

@@ -10,7 +10,6 @@ import LandPlot from '../../../assets/object/land_plot.png';
 import PaddySeed from '../../../assets/object/paddy_1.png';
 import PaddySprout from '../../../assets/object/paddy_2.png';
 import PaddyMature from '../../../assets/object/paddy_3.png';
-import { useUserStore } from '../../../stores';
 import PlantTooltip from './PlantTooltip';
 import { typeMap, type InternalPlantType, type Plant, type PlantPhase } from './types';
 
@@ -39,7 +38,6 @@ const plantImages = {
 };
 
 function FarmTile({ plant, isTooltipOpen, dataPlant, onDrop, onClick, onEndTime }: FarmTileProps) {
-  const { itemsConfigData } = useUserStore();
   const getPlantImage = (plantType: InternalPlantType, phase: PlantPhase): string => {
     return plantImages[plantType][phase];
   };
