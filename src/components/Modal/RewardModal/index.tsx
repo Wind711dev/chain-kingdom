@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import CoinIcon from '../../../assets/object/coin.png';
+import GrassIcon from '../../../assets/object/grass.png';
 import MilkIcon from '../../../assets/object/milk.png';
 import CloseBtn from '../../../assets/object/x_btn.png';
-import { useDataStore } from '../../../stores';
+import { useFightStore } from '../../../stores/fight.store';
 import BaseModal from '../BaseModal';
 import './styles.scss';
 
@@ -15,7 +16,7 @@ interface IReavardModalProps {
   onClose?: () => void;
 }
 
-type RewardType = 'coin' | 'milk';
+type RewardType = 'coin' | 'milk' | 'grass' | string;
 
 interface IRewardData {
   type: RewardType;
@@ -26,20 +27,11 @@ export default function RewardModal({
   isOpen,
   title = 'victory',
   contentText = 'You have defeated the enemy',
-  rewardData = [
-    {
-      type: 'coin',
-      quantity: 1,
-    },
-    {
-      type: 'milk',
-      quantity: 1,
-    },
-  ],
   onClaim,
   onClose,
 }: IReavardModalProps) {
-  const { claimMilk, claimGold } = useDataStore();
+  // const { claimMilk, claimGold } = useDataStore();
+  const { itemReward } = useFightStore();
 
   const getIcon = (type: RewardType) => {
     switch (type) {
@@ -47,16 +39,18 @@ export default function RewardModal({
         return CoinIcon;
       case 'milk':
         return MilkIcon;
+      case 'grass':
+        return GrassIcon;
 
       default:
         break;
     }
   };
-  const rewardElm = rewardData.map((item, index) => {
+  const rewardElm = itemReward.map((item, index) => {
     return (
       <div key={index}>
-        <img src={getIcon(item.type)} alt={item.type} className='w-12 h-12' />
-        <div className='text-[#4F1E03] py-1'>x{item.quantity}</div>
+        <img src={getIcon(item.name)} alt={item.name} className='w-12 h-12' />
+        <div className='text-[#4F1E03] py-1'>x{item.total}</div>
       </div>
     );
   });
@@ -65,15 +59,15 @@ export default function RewardModal({
   };
   useEffect(() => {
     if (isOpen) {
-      const rewardObject: Record<RewardType, number> = rewardData.reduce(
+      const rewardObject: Record<RewardType, number> = itemReward.reduce(
         (acc, item) => {
-          acc[item.type] = item.quantity;
+          acc[item.type] = item.total;
           return acc;
         },
         {} as Record<string, number>
       );
-      claimGold(rewardObject.coin);
-      claimMilk(rewardObject.milk);
+      // claimGold(rewardObject.coin);
+      // claimMilk(rewardObject.milk);
     }
   }, [isOpen]);
   return (

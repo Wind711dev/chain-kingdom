@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ShelterInfo } from '../apis/AnimalInstance/type';
+import type { ShelterInfo } from '../apis/AnimalInstance/types';
 
 interface IInit {
   shelterTypes: ShelterInfo[];

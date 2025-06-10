@@ -16,13 +16,13 @@ export interface Product {
 
 export interface AnimalMetadata {
   animal_id: number;
-  feedItem: FeedItem;
+  FeedItem: FeedItem;
   feed_id: number;
   level: number;
   max_loading_time: number;
   max_production_holding: number;
   price: number;
-  product: Product;
+  Product: Product;
   product_id: number;
   production_per_min: number;
   total_feed: number;

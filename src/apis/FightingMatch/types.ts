@@ -1,13 +1,13 @@
-export interface Statistic {
+export type UserStatistic = {
   hp: number;
   attack: number;
-  crit_rate: string;
+  crit_rate: string; // có thể đổi thành number nếu dữ liệu luôn là số
   crit_damage: number;
   damage_multiplier: number;
-  evade_rate: string;
-}
+  evade_rate: string; // như trên
+};
 
-export interface User {
+export type User = {
   id: number;
   username: string;
   first_name: string;
@@ -20,18 +20,20 @@ export interface User {
   last_login: string;
   created_at: string;
   updated_at: string;
-  statistic: Statistic;
-}
+  statistic: UserStatistic;
+};
 
-export interface RewardItem {
+export type Item = {
   id: number;
-  name: string;
+  name: 'coin' | 'milk' | 'grass' | string;
   type: string;
   price: number;
   sell_price: number;
-}
+};
 
-export interface Enemy {
+export type RewardItem = Item;
+
+export type Enemy = {
   id: number;
   name: string;
   description: string;
@@ -44,20 +46,29 @@ export interface Enemy {
   reward_item_id: number;
   reward_item: RewardItem;
   total_reward: number;
-}
+};
 
-export interface Item extends RewardItem {
+export type ItemMetadata = {
+  type: string;
+  source: string;
+  metadata: {
+    enemy_id: number;
+  };
+};
+
+export type MatchItem = Item & {
   total: number;
-}
+  metadata: ItemMetadata;
+};
 
-export interface BattleData {
+export type FightResult = {
   defender_id: number;
   defender: User;
   enemies: Enemy[];
-  items: Item[];
+  items: MatchItem[];
   is_win: boolean;
-}
+};
 
-export interface BattleResponse {
-  data: BattleData;
-}
+export type FightResultResponse = {
+  data: FightResult;
+};

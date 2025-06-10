@@ -1,10 +1,10 @@
-import { axiosAuthInstance } from '../axiosInstance';
-import type { BattleResponse } from './types';
+import { apiPost } from '../apiService';
+import type { FightResultResponse } from './types';
 
 enum Path {
   Match = '/api/v1/match',
 }
 
 export const fetchFightingMatch = () => {
-  return axiosAuthInstance.get<BattleResponse>(`${Path.Match}`);
+  return apiPost<FightResultResponse>(`${Path.Match}`, {});
 };

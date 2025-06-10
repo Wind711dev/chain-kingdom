@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
 import {
-    fetchCreateAnimalShelter,
-    fetchGetAllAnimalShelter,
-    fetchGetShelter,
-    fetchGetShelterTypes,
+  fetchCreateAnimalShelter,
+  fetchGetAllAnimalShelter,
+  fetchGetShelter,
+  fetchGetShelterTypes,
 } from '../apis';
 import { useInitStore, useShelter } from '../stores';
+import { ShedTypes } from '../utils/enum';
 
 export const useAnimalShelter = () => {
-  const { setShelters, getShelterId } = useShelter();
+  const { setShelters, getShelterId, setCowInShelter } = useShelter();
   const { setShelterTypes } = useInitStore();
 
   const handleCreatAnimalShelter = useCallback(async (id: number) => {
@@ -45,8 +46,15 @@ export const useAnimalShelter = () => {
     try {
       const id = getShelterId(shedName);
       const res = await fetchGetShelter(id);
-      if (res) {
-        console.log('🚀 ~ handleGetShelter ~ res:', res);
+      if (res.status === 200) {
+        switch (shedName) {
+          case ShedTypes.CowShed:
+            setCowInShelter(res.responseData.data.animals);
+            break;
+
+          default:
+            break;
+        }
       } else {
         throw new Error('error');
       }
@@ -59,7 +67,6 @@ export const useAnimalShelter = () => {
       const res = await fetchGetShelterTypes();
       if (res.status === 200) {
         setShelterTypes(res.responseData.data);
-        console.log('🚀 ~ handleGetShelterTypes ~ res:', res);
       } else {
         throw new Error('error');
       }

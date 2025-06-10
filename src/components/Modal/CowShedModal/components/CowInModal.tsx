@@ -16,7 +16,7 @@ interface IProps {
   status: CowStatus | string; // 0: idle, 1: eating, 2: milking
   milkHudRef: React.RefObject<HTMLDivElement | null>;
   isTooltipOpen?: boolean;
-  dataCow?: IDataCow;
+  dataCow: IDataCow;
   disabled?: boolean;
   cowPrice?: number;
   setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,8 +28,9 @@ interface IProps {
 }
 
 interface IDataCow {
-  quantity?: number;
-  time?: number;
+  quantity: number;
+  maxLoadTime: number;
+  lastFeedTime: string;
   cost?: number;
 }
 
@@ -159,7 +160,7 @@ function CowInModal({
         className={`${status === CowStatus.ADD ? 'relative' : ''}`}
       >
         <div ref={cowRef}>
-          {status === '1' && (
+          {status === CowStatus.EATING && (
             <CowTooltip
               isOpen={isTooltipOpen}
               data={dataCow}
@@ -169,7 +170,7 @@ function CowInModal({
               <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />
             </CowTooltip>
           )}
-          {status !== '1' && <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />}
+          {status !== CowStatus.EATING && <img src={Cow} alt='Cow' className='w-[12vw] h-[18vw]' />}
         </div>
         {status === CowStatus.ADD && (
           <div className='absolute flex items-center justify-center gap-1 bottom-[5%] left-0 right-0'>

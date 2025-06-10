@@ -10,6 +10,7 @@ import LandPlot from '../../../assets/object/land_plot.png';
 import PaddySeed from '../../../assets/object/paddy_1.png';
 import PaddySprout from '../../../assets/object/paddy_2.png';
 import PaddyMature from '../../../assets/object/paddy_3.png';
+import { useUserStore } from '../../../stores';
 import PlantTooltip from './PlantTooltip';
 import { typeMap, type InternalPlantType, type Plant, type PlantPhase } from './types';
 
@@ -17,15 +18,16 @@ interface FarmTileProps {
   plant: Plant;
   plantRef: React.RefObject<HTMLDivElement | null>;
   isTooltipOpen?: boolean;
-  dataPlant?: IDataPlant;
-  onDrop: (plantId: number, name: keyof typeof typeMap) => void;
+  dataPlant: IDataPlant;
+  onDrop: (plantId: string, name: keyof typeof typeMap) => void;
   onBuyFast?: () => void;
   onClick?: () => void;
-  onEndTime: (id: number, phase: PlantPhase) => void;
+  onEndTime: (id: string, phase: PlantPhase) => void;
 }
 interface IDataPlant {
   quantity?: number;
-  time?: number;
+  minute: number;
+  second: number;
   cost?: number;
 }
 
@@ -37,6 +39,7 @@ const plantImages = {
 };
 
 function FarmTile({ plant, isTooltipOpen, dataPlant, onDrop, onClick, onEndTime }: FarmTileProps) {
+  const { itemsConfigData } = useUserStore();
   const getPlantImage = (plantType: InternalPlantType, phase: PlantPhase): string => {
     return plantImages[plantType][phase];
   };

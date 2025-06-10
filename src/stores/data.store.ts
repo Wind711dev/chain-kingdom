@@ -12,6 +12,7 @@ interface IDataState {
   milkHoldTime: number;
   grass: number;
   cowPrice: number;
+  setGold: (gold: number) => void;
   claimGold: (gold: number) => void;
   claimMilk: (milk: number) => void;
   setMilkHolding: () => void;
@@ -28,6 +29,10 @@ export const useDataStore = create<IDataState>()((set, get) => ({
   milkHoldTime: 0,
   grass: 20,
   cowPrice: 500,
+  setGold: (gold) =>
+    set(() => ({
+      goldAll: gold,
+    })),
   claimGold: (gold) =>
     set((state) => ({
       goldAll: state.goldAll + gold,

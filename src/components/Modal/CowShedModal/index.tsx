@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 
+import type { AnimalInShelter } from '../../../apis/AnimalInstance/types';
 import CowShed from '../../../assets/object/cow_shed_modal.png';
 import Grass from '../../../assets/object/grass.png';
 import XButton from '../../../assets/object/x_btn.png';
 import { useAnimalInstance, useAnimalShelter } from '../../../hooks';
-import { useDataStore } from '../../../stores';
+import { useDataStore, useShelter, useUserStore } from '../../../stores';
 import BaseModal from '../BaseModal';
 import CowInModal from './components/CowInModal';
 import GrassDragPreview from './components/GrassDragPreview';
@@ -16,8 +17,14 @@ interface ICowShedModalProps {
   isOpen: boolean;
   onClose?: () => void;
   setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
-  handleCailm: (milk: number) => void;
   milkHudRef: React.RefObject<HTMLDivElement | null>;
+}
+
+interface ICow extends AnimalInShelter {
+  status: CowStatus.IDLE | CowStatus.ADD | CowStatus.EATING | CowStatus.MILKING;
+  quantity: number;
+  time: number;
+  cost: number;
 }
 
 const shedName = 'cowshed';
@@ -26,55 +33,20 @@ export default function CowShedModal({
   isOpen,
   onClose,
   setShakeMilkIcon,
-  handleCailm,
   milkHudRef,
 }: ICowShedModalProps) {
-  const { goldAll, grass, cowPrice, cowShed, useGold } = useDataStore();
+  const { goldAll, cowShed, useGold } = useDataStore();
   const { handleGetShelter } = useAnimalShelter();
-  const { handleCreateAnimalInShelter } = useAnimalInstance();
+  const { inventoryData } = useUserStore();
+  const { handleCreateAnimalInShelter, handleFeed, handleClaim } = useAnimalInstance();
+  const { cowInShelter } = useShelter();
 
   const imgRef = useRef<HTMLImageElement>(null);
   const [isTooltip, setIsTooltip] = useState(false);
   const [hoveredCow, setHoveredCow] = useState<number | null>(null);
   const [disabledCows, setDisabledCows] = useState<boolean[]>([]);
-  const [cowArray, setCowArray] = useState([
-    {
-      status: CowStatus.IDLE,
-      quantity: 0,
-      time: 0,
-      cost: 0,
-    },
-    // {
-    //   status: CowStatus.IDLE,
-    //   quantity: 0,
-    //   time: 0,
-    //   cost: 0,
-    // },
-    // {
-    //   status: CowStatus.IDLE,
-    //   quantity: 0,
-    //   time: 0,
-    //   cost: 0,
-    // },
-    // {
-    //   status: CowStatus.IDLE,
-    //   quantity: 0,
-    //   time: 0,
-    //   cost: 0,
-    // },
-    // {
-    //   status: CowStatus.IDLE,
-    //   quantity: 0,
-    //   time: 0,
-    //   cost: 0,
-    // },
-    // {
-    //   status: CowStatus.EATING,
-    //   quantity: 60,
-    //   time: 20,
-    //   cost: 3,
-    // },
-  ]);
+  const [cowArray, setCowArray] = useState<ICow[]>([]);
+  const [cowPrice, setCowPrice] = useState<number>(0);
 
   const [{ opacity }, drag, dragPreview] = useDrag(() => ({
     type: CowModal.GRASS,
@@ -85,34 +57,34 @@ export default function CowShedModal({
     }),
   }));
 
+  const grass = useMemo(() => {
+    const grassItem = inventoryData.find((item) => item.info.name === 'grass');
+    return grassItem ? grassItem.total : 0;
+  }, [inventoryData]);
+
   const onClickAddCow = useCallback(() => {
-    handleCreateAnimalInShelter();
+    handleCreateAnimalInShelter(shedName);
     useGold(cowPrice);
-    setCowArray((prev) => [...prev, { status: CowStatus.IDLE, quantity: 0, time: 0, cost: 0 }]);
-  }, [handleCreateAnimalInShelter, useGold, setCowArray, cowPrice]);
+  }, [handleCreateAnimalInShelter, useGold, cowPrice]);
   const onClickMilkHarvest = useCallback(
-    (value: number) => {
-      handleCailm(cowArray[value].quantity);
+    (id: string, index: number) => {
+      handleClaim(id);
       setCowArray((prev) => {
         const newCows = [...prev];
-        newCows[value].status = CowStatus.IDLE;
-        newCows[value].cost = 0;
-        newCows[value].quantity = 0;
-        newCows[value].time = 0;
+        newCows[index].status = CowStatus.IDLE;
+        newCows[index].cost = 0;
         return newCows;
       });
     },
-    [cowArray]
+    [cowArray, handleClaim, setCowArray]
   );
 
-  const handleFeedCow = (value: number) => {
+  const handleFeedCow = (id: string, index: number) => {
     cowShed(1);
+    handleFeed(id);
     setCowArray((prev) => {
       const newCows = [...prev];
-      newCows[value].status = CowStatus.EATING;
-      newCows[value].cost = 3;
-      newCows[value].quantity = 60;
-      newCows[value].time = 20;
+      newCows[index].status = CowStatus.EATING;
       return newCows;
     });
   };
@@ -157,49 +129,57 @@ export default function CowShedModal({
   );
 
   const CowMap = useMemo(() => {
-    const cows = cowArray.map((item, index) => (
-      <CowInModal
-        key={index}
-        status={item.status}
-        disabled={disabledCows[index]}
-        dataCow={{ quantity: item.quantity, time: item.time, cost: item.cost }}
-        milkHudRef={milkHudRef}
-        onClick={() => {
-          onClickCowEat(index);
-        }}
-        onDrop={() => {
-          handleFeedCow(index);
-        }}
-        setShakeMilkIcon={setShakeMilkIcon}
-        handleCailm={() => {
-          setDisabledCows((prev) => {
-            const updated = [...prev];
-            updated[index] = true;
-            return updated;
-          });
-
-          onClickMilkHarvest(index);
-
-          setTimeout(() => {
+    const cows = cowArray.map((item, index) => {
+      return (
+        <CowInModal
+          key={index}
+          status={item.status}
+          disabled={disabledCows[index]}
+          dataCow={{
+            quantity: item.quantity,
+            lastFeedTime: item.last_feed_at,
+            maxLoadTime: item.metadata.max_loading_time,
+            cost: item.cost,
+          }}
+          milkHudRef={milkHudRef}
+          onClick={() => {
+            onClickCowEat(index);
+          }}
+          onDrop={() => {
+            handleFeedCow(item.id, index);
+          }}
+          setShakeMilkIcon={setShakeMilkIcon}
+          handleCailm={() => {
             setDisabledCows((prev) => {
               const updated = [...prev];
-              updated[index] = false;
+              updated[index] = true;
               return updated;
             });
-          }, 1000);
-        }}
-        handleEndTime={() => handleEndTime(index)}
-        isTooltipOpen={hoveredCow === index && item.time > 0}
-        onBuyFast={() => {
-          onBuyFast(index);
-        }}
-      />
-    ));
+
+            onClickMilkHarvest(item.id, index);
+
+            setTimeout(() => {
+              setDisabledCows((prev) => {
+                const updated = [...prev];
+                updated[index] = false;
+                return updated;
+              });
+            }, 1000);
+          }}
+          handleEndTime={() => handleEndTime(index)}
+          isTooltipOpen={hoveredCow === index && item.time > 0}
+          onBuyFast={() => {
+            onBuyFast(index);
+          }}
+        />
+      );
+    });
     if (cowArray.length < 6) {
       cows.push(
         <CowInModal
           key={'add'}
           status={CowStatus.ADD}
+          dataCow={{ quantity: 0, cost: 0, lastFeedTime: '', maxLoadTime: 0 }}
           milkHudRef={milkHudRef}
           onDrop={() => {}}
           onClick={onClickAddCow}
@@ -231,6 +211,33 @@ export default function CowShedModal({
   useEffect(() => {
     setDisabledCows(new Array(cowArray.length).fill(false));
   }, [cowArray]);
+
+  const cowSet = useCallback(() => {
+    if (!cowInShelter || cowInShelter.length < 0) {
+      handleCreateAnimalInShelter(shedName);
+      return;
+    }
+    const cowArr = cowInShelter.map((item) => {
+      if (cowPrice === 0) {
+        setCowPrice(item.metadata.price);
+      }
+      return {
+        ...item,
+        status: item.last_feed_at === null ? CowStatus.IDLE : CowStatus.EATING,
+        quantity: item.metadata.max_loading_time,
+        time: item.metadata.max_production_holding * 60,
+        cost: 0,
+      };
+    });
+    setCowArray(cowArr as ICow[]);
+  }, [cowInShelter, cowPrice, setCowArray]);
+
+  useEffect(() => {
+    if (isOpen) {
+      cowSet();
+    }
+  }, [isOpen, cowSet]);
+
   useEffect(() => {
     if (!isOpen) {
       setIsTooltip(false);

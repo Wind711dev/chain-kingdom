@@ -11,7 +11,7 @@ import type { InternalPlantType } from './types';
 
 interface IPlantTooltip {
   children: React.ReactNode;
-  data?: IContentElm;
+  data: IContentElm;
   arrow?: 'Show' | 'Hide' | 'Center';
   isOpen?: boolean;
   placement?: TooltipPlacement;
@@ -21,12 +21,13 @@ interface IPlantTooltip {
 }
 interface IContentElm {
   quantity?: number;
-  time?: number;
+  minute: number;
+  second: number;
   cost?: number;
   type?: InternalPlantType;
   onBuyFast?: () => void;
 }
-const ContentElm = ({ quantity, time, cost, type, onBuyFast }: IContentElm) => {
+const ContentElm = ({ quantity, minute, second, cost, type, onBuyFast }: IContentElm) => {
   const ImgPlant = useMemo(() => {
     switch (type) {
       case 'carrot':
@@ -41,9 +42,9 @@ const ContentElm = ({ quantity, time, cost, type, onBuyFast }: IContentElm) => {
     }
   }, [type]);
   return (
-    <div className='flex items-center justify-evenly h-full p-2 w-[30vw]'>
-      <div className='flex h-full'>
-        <img src={ImgPlant} alt='ImgPlant' className='w-6 h-6' />
+    <div className='flex items-center justify-evenly h-full py-2 w-[35vw]'>
+      <div className='flex h-full justify-center items-center gap-0.5'>
+        <img src={ImgPlant} alt='ImgPlant' className='w-8 h-8' />
         <p className='text-[#7B3706] text-base font-bold'>{quantity}</p>
       </div>
       <div className='custom-border-v'></div>
@@ -51,7 +52,8 @@ const ContentElm = ({ quantity, time, cost, type, onBuyFast }: IContentElm) => {
         <div className='py-2 w-full flex justify-center items-center relative'>
           <img src={ClockIcon} alt='ClockIcon' className='w-6 h-6 absolute left-[-5%]' />
           <div className='time-container w-[100%] h-3 flex items-center justify-center text-[#7B3706] text-sm font-bold uppercase'>
-            {time}s
+            {minute > 0 && <span>{String(minute).padStart(2, '0')}m </span>}
+            <span>{String(second).padStart(2, '0')}s</span>
           </div>
         </div>
         <button className='btn-fast' onClick={onBuyFast}>
@@ -65,7 +67,7 @@ const ContentElm = ({ quantity, time, cost, type, onBuyFast }: IContentElm) => {
 
 export default function PlantTooltip({
   children,
-  data = { quantity: 1, time: 20, cost: 3 },
+  data,
   arrow = 'Show',
   isOpen,
   placement = 'bottom',
@@ -73,7 +75,8 @@ export default function PlantTooltip({
   onBuyFast,
   handleEndTime,
 }: IPlantTooltip) {
-  const [remainingTime, setRemainingTime] = useState(data.time);
+  const [minute, setMinute] = useState(data.minute);
+  const [second, setSecond] = useState(data.second);
   const mergedArrow = useMemo<TooltipProps['arrow']>(() => {
     if (arrow === 'Hide') {
       return false;
@@ -88,30 +91,30 @@ export default function PlantTooltip({
     };
   }, [arrow]);
 
-  // useEffect(() => {
-  //   if (remainingTime === undefined && data.time !== undefined) {
-  //     setRemainingTime(data.time);
-  //   }
-  // }, [data.time]);
-
   useEffect(() => {
-    if (type === 'none' || remainingTime === undefined) {
+    if (minute === 0 && second === 0 && minute !== undefined) {
+      handleEndTime();
       return;
     }
 
     const interval = setInterval(() => {
-      setRemainingTime((prev) => {
-        if (prev === undefined || prev <= 1) {
-          handleEndTime();
-          clearInterval(interval);
-          return 0;
+      setSecond((prevSecond) => {
+        if (prevSecond > 0) return prevSecond - 1;
+
+        // Nếu second == 0, giảm phút và đặt lại giây
+        if (minute !== undefined && minute > 0) {
+          setMinute((prevMinute) => (prevMinute !== undefined ? prevMinute - 1 : 0));
+          return 59;
         }
-        return prev - 1;
+
+        // Đã hết thời gian
+        clearInterval(interval);
+        return 0;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [remainingTime, type]);
+  }, [minute, second]);
 
   return (
     <Tooltip
@@ -122,7 +125,8 @@ export default function PlantTooltip({
         <ContentElm
           cost={data.cost}
           quantity={data.quantity}
-          time={remainingTime}
+          minute={minute}
+          second={second}
           onBuyFast={onBuyFast}
           type={type}
         />

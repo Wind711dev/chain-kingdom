@@ -1,12 +1,12 @@
 //api
 
 import { axiosAuthInstance } from '../axiosInstance';
-import type { AnimalInShelter } from './type';
+import type { AnimalInShelter } from './types';
 
 enum Path {
   CreateAnimalInShelter = '/api/v1/animal-shelter',
-  Claim = '/api/v1/animal/claim/{id}',
-  Feed = '/api/v1/animal/feed/{id}',
+  Claim = '/api/v1/animal/claim',
+  Feed = '/api/v1/animal/feed',
 }
 
 export const fetchCreateAnimalInShelter = (ushelter_id: string) => {
@@ -14,9 +14,9 @@ export const fetchCreateAnimalInShelter = (ushelter_id: string) => {
     `${Path.CreateAnimalInShelter}/${ushelter_id}/animal`
   );
 };
-export const fetchClaim = (id: number) => {
+export const fetchClaim = (id: string) => {
   return axiosAuthInstance.patch<AnimalInShelter>(`${Path.Claim}/${id}`);
 };
-export const fetchFeed = (id: number) => {
+export const fetchFeed = (id: string) => {
   return axiosAuthInstance.patch<AnimalInShelter>(`${Path.Feed}/${id}`);
 };

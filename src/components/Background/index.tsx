@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useAnimalShelter, useProfile } from '../../hooks';
+import { useFarm } from '../../hooks/useFarm';
 import DiamondHoneycombGrid from './Gird';
 import './styles.scss';
 
@@ -22,7 +23,8 @@ export default function Background({
   showGrid = false,
   onClick,
 }: IBackgroundProps) {
-  const { getUseProfile } = useProfile();
+  const { getUseProfile, getInventory, getItemsConfig } = useProfile();
+  const { handleGetFarmPlots } = useFarm();
   const { handleGetAllAnimalShelter, handleGetShelterTypes } = useAnimalShelter();
 
   const [coordinates, _setCoordinates] = useState<ICoordinates>({
@@ -37,7 +39,14 @@ export default function Background({
 
   useEffect(() => {
     getUseProfile();
-  }, [getUseProfile]);
+    getInventory();
+    getItemsConfig();
+  }, [getUseProfile, getInventory, getItemsConfig]);
+
+  useEffect(() => {
+    handleGetFarmPlots();
+  }, [handleGetFarmPlots]);
+
   useEffect(() => {
     setupShelter();
   }, [setupShelter]);

@@ -10,12 +10,14 @@ import { CowShedModal } from '../../components/Modal';
 import MissonModal from '../../components/Modal/MissonModal';
 import RewardModal from '../../components/Modal/RewardModal';
 import Warehouse from '../../components/Warehouse';
+import { useFightingMatch } from '../../hooks/useFightingMatch';
 import { useDataStore } from '../../stores/data.store';
 import { useFarmStore } from '../../stores/farm.store';
 
 export default function HomeScreen() {
   const { goldAll, milkAll, claimMilk } = useDataStore();
   const { farmTooltip, setFarmTooltip } = useFarmStore();
+  const { handleFightingMatch } = useFightingMatch();
 
   const [shakeMilkIcon, setShakeMilkIcon] = useState(false);
   const [shakeGoldIcon, setShakeGoldIcon] = useState(false);
@@ -51,6 +53,7 @@ export default function HomeScreen() {
 
   const onStartCombat = () => {
     setIsShowCombat(true);
+    handleFightingMatch();
     // setTimeout(() => {
     //   const el = document.getElementById('combat');
     //   if (el) {
@@ -86,7 +89,6 @@ export default function HomeScreen() {
       <CowShedModal
         isOpen={isCowShedOpen}
         onClose={onClickCowShed}
-        handleCailm={(milk) => claimMilk(milk)}
         milkHudRef={milkHudRef}
         setShakeMilkIcon={setShakeMilkIcon}
       />

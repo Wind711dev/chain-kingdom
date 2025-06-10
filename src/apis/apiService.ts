@@ -53,12 +53,9 @@ export const apiPost = async <T>(
         'Content-Type': 'multipart/form-data',
       };
     }
-
-    console.log('apiPost data', data);
     const response = auth
       ? await axiosAuthInstance.post<T>(url, data, config)
       : await axiosNoAuthInstance.post<T>(url, data, config);
-    console.log('apiPost response', response);
     return {
       responseData: response.data,
       status: response.status,
@@ -89,12 +86,22 @@ export const apiPut = async <T>(
 };
 
 // ✅ PATCH request
-export const apiPatch = async <T>(url: string, data: any, auth: boolean = true): Promise<T> => {
+export const apiPatch = async <T>(
+  url: string,
+  data: any,
+  auth: boolean = true
+): Promise<{
+  responseData: T;
+  status: number;
+}> => {
   try {
     const response = auth
       ? await axiosAuthInstance.patch<T>(url, data)
       : await axiosNoAuthInstance.patch<T>(url, data);
-    return response.data;
+    return {
+      responseData: response.data,
+      status: response.status,
+    };
   } catch (error: any) {
     throw error.response?.data || error.message;
   }

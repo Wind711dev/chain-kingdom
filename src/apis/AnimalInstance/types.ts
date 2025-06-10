@@ -16,13 +16,13 @@ export interface Product {
 
 export interface AnimalMetadata {
   animal_id: number;
-  feedItem: FeedItem;
+  FeedItem: FeedItem;
   feed_id: number;
   level: number;
   max_loading_time: number;
   max_production_holding: number;
   price: number;
-  product: Product;
+  Product: Product;
   product_id: number;
   production_per_min: number;
   total_feed: number;
@@ -45,17 +45,6 @@ export interface Animal {
   shelter_id: number;
 }
 
-export interface Shelter {
-  animal_shelter_id: number;
-  animals: string[];
-  created_at: string;
-  id: string;
-  pos_x: number;
-  pos_y: number;
-  shelterInfo: ShelterInfo;
-  updated_at: string;
-}
-
 export interface AnimalInShelter {
   animal: Animal;
   animal_id: number;
@@ -66,7 +55,18 @@ export interface AnimalInShelter {
   level: number;
   metadata: AnimalMetadata;
   position: number;
-  shelter: Shelter;
+  shelter: string;
   updated_at: string;
   user_animal_shelter_id: string;
+}
+
+export interface UserAnimalShelter {
+  animal_shelter_id: number;
+  animals: AnimalInShelter[];
+  created_at: string;
+  id: string;
+  info: ShelterInfo;
+  pos_x: number;
+  pos_y: number;
+  updated_at: string;
 }

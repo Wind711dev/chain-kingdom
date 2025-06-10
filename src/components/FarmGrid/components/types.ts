@@ -10,10 +10,11 @@ export const typeMap: Record<PlantType, InternalPlantType> = {
 };
 
 export interface Plant {
-  id: number;
+  id: string;
   type: InternalPlantType;
   phase: PlantPhase;
-  quantity: number
-  time: number
-  cost: number
+  quantity: number;
+  minute: number;
+  second: number;
+  cost: number;
 }
