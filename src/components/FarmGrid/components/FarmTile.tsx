@@ -245,16 +245,16 @@ function FarmTileComponent({
     </div>
   );
 }
-function areEqual(prevProps: FarmTileProps, nextProps: FarmTileProps) {
-  return (
-    prevProps.dataPlant?.id === nextProps.dataPlant?.id
-    // prevProps.dataPlant?.seed_id === nextProps.dataPlant?.seed_id &&
-    // prevProps.dataPlant?.last_seed_at === nextProps.dataPlant?.last_seed_at &&
-    // prevProps.isTooltipOpen === nextProps.isTooltipOpen
-    // callback functions thường không đổi reference nếu dùng useCallback từ cha
-    // nên bạn có thể bỏ kiểm nếu chắc chắn hoặc so sánh === nếu muốn kỹ hơn
-  );
-}
+// function areEqual(prevProps: FarmTileProps, nextProps: FarmTileProps) {
+//   return (
+//     prevProps.dataPlant?.id === nextProps.dataPlant?.id
+//     // prevProps.dataPlant?.seed_id === nextProps.dataPlant?.seed_id &&
+//     // prevProps.dataPlant?.last_seed_at === nextProps.dataPlant?.last_seed_at &&
+//     // prevProps.isTooltipOpen === nextProps.isTooltipOpen
+//     // callback functions thường không đổi reference nếu dùng useCallback từ cha
+//     // nên bạn có thể bỏ kiểm nếu chắc chắn hoặc so sánh === nếu muốn kỹ hơn
+//   );
+// }
 
 const FarmTile = memo(FarmTileComponent);
 export default FarmTile;
