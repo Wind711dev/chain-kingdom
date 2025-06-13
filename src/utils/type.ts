@@ -16,3 +16,5 @@ export type MilkLevelInfo = {
   maxMilkHolding: number;
   claimablePercent: number;
 };
+
+export type BuildType = 'plant' | 'sheep-house' | 'cowshed' | 'shirt-factory' | null;

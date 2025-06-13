@@ -14,12 +14,10 @@ import './styles.scss';
 
 interface IProps {
   status: CowStatus | string; // 0: idle, 1: eating, 2: milking
-  milkHudRef: React.RefObject<HTMLDivElement | null>;
   isTooltipOpen?: boolean;
   dataCow: IDataCow;
   disabled?: boolean;
   cowPrice?: number;
-  setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
   onBuyFast?: () => void;
   onDrop: () => void;
   handleCailm: () => void;
@@ -36,14 +34,12 @@ interface IDataCow {
 
 function CowInModal({
   status,
-  milkHudRef,
   isTooltipOpen,
   dataCow,
   disabled,
   cowPrice,
   onDrop,
   handleCailm,
-  setShakeMilkIcon,
   onClick,
   handleEndTime,
   onBuyFast,
@@ -80,22 +76,13 @@ function CowInModal({
     []
   );
   const handleCollectMilk = () => {
-    if (flyingMilk || !cowRef.current || !milkHudRef.current) return;
+    if (flyingMilk || !cowRef.current) return;
 
     const cowRect = cowRef.current.getBoundingClientRect();
-    const milkIcon = milkHudRef.current.querySelector('img');
-    if (!milkIcon) return;
-
-    const milkRect = milkIcon.getBoundingClientRect();
 
     const start = {
       x: cowRect.left + cowRect.width / 2,
       y: cowRect.top + cowRect.height / 2,
-    };
-
-    const end = {
-      x: milkRect.left + milkRect.width / 2,
-      y: milkRect.top + milkRect.height / 2,
     };
 
     const icons: JSX.Element[] = [];
@@ -114,10 +101,6 @@ function CowInModal({
         <FlyingComponent
           key={i}
           start={{ x: start.x + offsetX, y: start.y + offsetY }}
-          end={end}
-          setShakeIcon={() => {
-            setShakeMilkIcon(true);
-          }}
           icon={MilkIcon}
           delay={delay}
           onComplete={() => {
@@ -125,7 +108,7 @@ function CowInModal({
             if (finishedCount === numIcons) {
               setFlyingMilk(false);
               setFlyingMilkIcons([]);
-              handleCailm();
+              handleCailm(); // nhận thưởng sau khi bay xong
             }
           }}
         />

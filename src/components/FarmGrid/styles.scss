@@ -1,45 +1,132 @@
-.farm-grid {
-  width: 35vw;
-  height: 35vw;
-  position: absolute;
-  top: 30vh;
-  left: 35vw;
-  transform: rotate(45deg);
-  .tile {
-    width: 60%;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .land-plot {
-      transform: rotate(-45deg);
-      width: 100%;
-      z-index: 2;
-    }
-    .plant {
-      position: absolute;
-      z-index: 3;
-      width: 80%;
-      transform: rotate(-45deg);
-      top: -12%;
-      left: 0%;
-    }
+// .farm-grid {
+// width: 90vw;
+// height: 35vh;
+// position: absolute;
+// top: 55vh;
+// // left: 35vw;
+// z-index: 1;
+.tile {
+  // width: 60%;
+  // position: absolute;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  .land-plot {
+    // width: 100%;
+    // z-index: 2;
   }
-
-  .tile:nth-child(1) {
-    top: 10%;
-    left: 5%;
+  .plant {
+    // position: absolute;
+    // z-index: 3;
+    // width: 80%;
+    // top: -14%;
+    // left: 12%;
   }
-  .tile:nth-child(2) {
-    top: 0%;
-    left: 44%;
-  }
-  .tile:nth-child(3) {
-    top: 40%;
-    left: 36%;
-  }
-  .tile:nth-child(4) {
-    top: 49%;
-    left: -4%;
+  .collect-icon {
+    // position: absolute;
+    // top: 0%; /* giống với .plant */
+    // left: 10%;
+    // width: 80%;
+    // z-index: 5;
+    // pointer-events: none; /* để không cản click */
   }
 }
+
+.tile:nth-child(1) {
+  top: 0%;
+  left: 20%;
+}
+.tile:nth-child(2) {
+  top: 6%;
+  left: 11%;
+}
+.tile:nth-child(3) {
+  top: 12%;
+  left: 2%;
+}
+.tile:nth-child(4) {
+  top: 6%;
+  left: 29%;
+}
+.tile:nth-child(5) {
+  top: 12%;
+  left: 20%;
+}
+.tile:nth-child(6) {
+  top: 18%;
+  left: 11%;
+}
+.tile:nth-child(7) {
+  top: 12%;
+  left: 38%;
+}
+.tile:nth-child(8) {
+  top: 18%;
+  left: 29%;
+}
+.tile:nth-child(9) {
+  top: 24%;
+  left: 20%;
+}
+.tile:nth-child(10) {
+  top: 18%;
+  left: 47%;
+}
+.tile:nth-child(11) {
+  top: 24%;
+  left: 38%;
+}
+.tile:nth-child(12) {
+  top: 30%;
+  left: 29%;
+}
+.tile:nth-child(13) {
+  top: 24%;
+  left: 56%;
+}
+.tile:nth-child(14) {
+  top: 30%;
+  left: 47%;
+}
+.tile:nth-child(15) {
+  top: 36%;
+  left: 38%;
+}
+.tile:nth-child(16) {
+  top: 30%;
+  left: 65%;
+}
+.tile:nth-child(17) {
+  top: 36%;
+  left: 56%;
+}
+.tile:nth-child(18) {
+  top: 42%;
+  left: 47%;
+}
+.tile:nth-child(19) {
+  top: 36%;
+  left: 74%;
+}
+.tile:nth-child(20) {
+  top: 42%;
+  left: 65%;
+}
+.tile:nth-child(21) {
+  top: 48%;
+  left: 56%;
+}
+.tile:nth-child(22) {
+  top: 42%;
+  left: 83%;
+}
+.tile:nth-child(23) {
+  top: 48%;
+  left: 74%;
+}
+.tile:nth-child(24) {
+  top: 54%;
+  left: 65%;
+}
+
+// }

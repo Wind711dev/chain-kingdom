@@ -1,9 +1,10 @@
 .house-container {
   position: absolute;
-  top: 7vh;
-  left: 3vw;
-  width: 75vw;
+  top: 30%;
+  left: 35%;
+  width: 32vw;
   height: auto;
+  z-index: 1;
   .house {
     width: 35vw;
     height: auto;
@@ -13,7 +14,7 @@
     position: absolute;
     bottom: -25%;
     left: 35%;
-    width: 7%;
+    width: 20%;
     transform: scaleX(-1);
   }
   .guard-container {

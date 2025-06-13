@@ -48,8 +48,7 @@ const SeedComponent = ({ type, name, id, onClose }: SeedItem & { onClose: () => 
     if (ref) {
       drag(ref);
     }
-    dragPreview(emptyImage);
-  }, [drag, dragPreview]);
+  }, [drag]);
 
   useEffect(() => {
     if (isDragging) {

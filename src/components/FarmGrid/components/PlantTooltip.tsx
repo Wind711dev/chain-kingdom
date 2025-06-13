@@ -1,6 +1,6 @@
-import { Tooltip, type TooltipProps } from 'antd';
+import { Tooltip } from 'antd';
 
-import type { TooltipPlacement } from 'antd/es/tooltip';
+// import type { TooltipPlacement } from 'antd/es/tooltip';
 import { useEffect, useMemo, useState } from 'react';
 import CarrotIcon from '../../../assets/object/carrot.png';
 import ClockIcon from '../../../assets/object/clock_icon.png';
@@ -11,23 +11,25 @@ import type { InternalPlantType } from './types';
 
 interface IPlantTooltip {
   children: React.ReactNode;
-  data: IContentElm;
-  arrow?: 'Show' | 'Hide' | 'Center';
-  isOpen?: boolean;
-  placement?: TooltipPlacement;
-  onBuyFast?: () => void;
-  handleEndTime: () => void;
-  type?: InternalPlantType;
+  isShowTooltip: boolean;
+  data: {
+    id: string;
+    timeSeed: string | null;
+    timeLoading: number;
+    quantity: number;
+    cost: number;
+    type: InternalPlantType;
+    timeCountDown: number;
+  };
+  handlePhaseWithTime: (isHalf: boolean) => void;
 }
 interface IContentElm {
-  quantity?: number;
-  minute: number;
-  second: number;
-  cost?: number;
-  type?: InternalPlantType;
-  onBuyFast?: () => void;
+  quantity: number;
+  countdown: number;
+  cost: number;
+  type: InternalPlantType;
 }
-const ContentElm = ({ quantity, minute, second, cost, type, onBuyFast }: IContentElm) => {
+const ContentElm = ({ quantity, countdown, cost, type }: IContentElm) => {
   const ImgPlant = useMemo(() => {
     switch (type) {
       case 'carrot':
@@ -41,6 +43,21 @@ const ContentElm = ({ quantity, minute, second, cost, type, onBuyFast }: IConten
         break;
     }
   }, [type]);
+  const { minutes, seconds } = useMemo(() => {
+    return {
+      minutes: Math.floor(countdown / 60),
+      seconds: countdown % 60,
+    };
+  }, [countdown]);
+  const secondGenerated = useMemo(() => {
+    if (seconds === 0) return '0';
+    return String(seconds).padStart(2, '0');
+  }, [seconds]);
+
+  const onBuyFast = () => {
+    // Implement the logic for fast buying here
+    console.log('Fast buy clicked');
+  };
   return (
     <div className='flex items-center justify-evenly h-full py-2 w-[35vw]'>
       <div className='flex h-full justify-center items-center gap-0.5'>
@@ -52,8 +69,8 @@ const ContentElm = ({ quantity, minute, second, cost, type, onBuyFast }: IConten
         <div className='py-2 w-full flex justify-center items-center relative'>
           <img src={ClockIcon} alt='ClockIcon' className='w-6 h-6 absolute left-[-5%]' />
           <div className='time-container w-[100%] h-3 flex items-center justify-center text-[#7B3706] text-sm font-bold uppercase'>
-            {minute > 0 && <span>{String(minute).padStart(2, '0')}m </span>}
-            <span>{String(second).padStart(2, '0')}s</span>
+            {minutes > 0 && <span>{String(minutes).padStart(2, '0')}m </span>}
+            <span>{secondGenerated}s</span>
           </div>
         </div>
         <button className='btn-fast' onClick={onBuyFast}>
@@ -67,68 +84,55 @@ const ContentElm = ({ quantity, minute, second, cost, type, onBuyFast }: IConten
 
 export default function PlantTooltip({
   children,
+  isShowTooltip,
   data,
-  arrow = 'Show',
-  isOpen,
-  placement = 'bottom',
-  type,
-  onBuyFast,
-  handleEndTime,
+  handlePhaseWithTime,
 }: IPlantTooltip) {
-  const [minute, setMinute] = useState(data.minute);
-  const [second, setSecond] = useState(data.second);
-  const mergedArrow = useMemo<TooltipProps['arrow']>(() => {
-    if (arrow === 'Hide') {
-      return false;
-    }
-
-    if (arrow === 'Show') {
-      return true;
-    }
-
-    return {
-      pointAtCenter: true,
-    };
-  }, [arrow]);
+  const [countdown, setCountdown] = useState<number | undefined>();
 
   useEffect(() => {
-    if (minute === 0 && second === 0 && minute !== undefined) {
-      handleEndTime();
+    if (data.timeCountDown === undefined || data.timeCountDown <= 0) {
+      setCountdown(undefined);
       return;
     }
 
+    setCountdown(data.timeCountDown);
+  }, [data.timeCountDown]);
+
+  useEffect(() => {
+    // Trường hợp không hợp lệ: không làm gì cả
+    if (countdown === undefined) return;
+
+    if (countdown <= 0) {
+      handlePhaseWithTime(false);
+      return;
+    }
+    if (countdown <= data.timeLoading / 2) {
+      handlePhaseWithTime(true);
+    }
     const interval = setInterval(() => {
-      setSecond((prevSecond) => {
-        if (prevSecond > 0) return prevSecond - 1;
-
-        // Nếu second == 0, giảm phút và đặt lại giây
-        if (minute !== undefined && minute > 0) {
-          setMinute((prevMinute) => (prevMinute !== undefined ? prevMinute - 1 : 0));
-          return 59;
+      setCountdown((prev) => {
+        if (prev === undefined || prev <= 1) {
+          clearInterval(interval);
+          return 0;
         }
-
-        // Đã hết thời gian
-        clearInterval(interval);
-        return 0;
+        return prev - 1;
       });
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [minute, second]);
+  }, [countdown, data.timeLoading, handlePhaseWithTime]);
 
   return (
     <Tooltip
-      open={isOpen}
-      arrow={mergedArrow}
-      placement={placement}
+      open={isShowTooltip}
+      arrow={true}
       title={
         <ContentElm
           cost={data.cost}
           quantity={data.quantity}
-          minute={minute}
-          second={second}
-          onBuyFast={onBuyFast}
-          type={type}
+          countdown={countdown ?? 0}
+          type={data.type}
         />
       }
     >

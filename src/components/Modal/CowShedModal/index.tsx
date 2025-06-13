@@ -16,8 +16,6 @@ import { CowModal, CowStatus } from './components/type';
 interface ICowShedModalProps {
   isOpen: boolean;
   onClose?: () => void;
-  setShakeMilkIcon: React.Dispatch<React.SetStateAction<boolean>>;
-  milkHudRef: React.RefObject<HTMLDivElement | null>;
 }
 
 interface ICow extends AnimalInShelter {
@@ -29,12 +27,7 @@ interface ICow extends AnimalInShelter {
 
 const shedName = 'cowshed';
 
-export default function CowShedModal({
-  isOpen,
-  onClose,
-  setShakeMilkIcon,
-  milkHudRef,
-}: ICowShedModalProps) {
+export default function CowShedModal({ isOpen, onClose }: ICowShedModalProps) {
   const { goldAll, cowShed, useGold } = useDataStore();
   const { handleGetShelter } = useAnimalShelter();
   const { inventoryData } = useUserStore();
@@ -141,14 +134,12 @@ export default function CowShedModal({
             maxLoadTime: item.metadata.max_loading_time,
             cost: item.cost,
           }}
-          milkHudRef={milkHudRef}
           onClick={() => {
             onClickCowEat(index);
           }}
           onDrop={() => {
             handleFeedCow(item.id, index);
           }}
-          setShakeMilkIcon={setShakeMilkIcon}
           handleCailm={() => {
             setDisabledCows((prev) => {
               const updated = [...prev];
@@ -180,10 +171,8 @@ export default function CowShedModal({
           key={'add'}
           status={CowStatus.ADD}
           dataCow={{ quantity: 0, cost: 0, lastFeedTime: '', maxLoadTime: 0 }}
-          milkHudRef={milkHudRef}
           onDrop={() => {}}
           onClick={onClickAddCow}
-          setShakeMilkIcon={setShakeMilkIcon}
           handleCailm={() => {}}
           handleEndTime={() => {}}
           cowPrice={cowPrice}
@@ -196,7 +185,6 @@ export default function CowShedModal({
     cowPrice,
     hoveredCow,
     disabledCows,
-    milkHudRef,
     handleEndTime,
     onClickCowEat,
     onClickMilkHarvest,

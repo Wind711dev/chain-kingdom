@@ -12,7 +12,7 @@ interface MonsterTeamProps {
 
 export default function MonsterTeam({ msg, isMsg, isWin, isAttack, defendRef }: MonsterTeamProps) {
   return (
-    <div className='absolute top-[55vh] left-[50%]' ref={defendRef} id='combat'>
+    <div className='absolute top-[35vh] left-[60%] z-10' ref={defendRef} id='combat'>
       <div className='relative'>
         <div className='relative'>
           <div className='absolute top-[-7vw] right-[-1vw]'>

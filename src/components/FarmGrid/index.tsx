@@ -1,24 +1,33 @@
 import dayjs from 'dayjs';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import { useCallback, useMemo } from 'react';
+
+import PlotAdd from '../../assets/object/plot_add.png';
 import { useFarm } from '../../hooks/useFarm';
-import { useUserStore } from '../../stores';
-import { useFarmStore } from '../../stores/farm.store';
+import { useFarmStore, useUserStore } from '../../stores';
 import FarmTile from './components/FarmTile';
-import type { Plant, PlantPhase } from './components/types';
-import { typeMap } from './components/types';
 import './styles.scss';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 interface FarmGridProps {
-  openPlantSeed?: () => void;
+  isBuilding: boolean;
+  openPlantSeed: () => void;
+  openClaimPlant: () => void;
+  onBuildPlot: () => void;
 }
 
-export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
-  const { farmTooltip, plantData, seedId, setFarmTooltip } = useFarmStore();
+export default function FarmGrid({
+  isBuilding,
+  openPlantSeed,
+  openClaimPlant,
+  onBuildPlot,
+}: FarmGridProps) {
+  const { farmTooltip, farmData, setFarmTooltip, seedId } = useFarmStore();
   const { itemsConfigData } = useUserStore();
-  const { handleSowingSeed } = useFarm();
-  const plantRef = useRef<HTMLDivElement>(null);
-
-  const [plants, setPlants] = useState<Plant[]>([]);
+  const { handleSowingSeed, handleClaimPlant } = useFarm();
+  // const plantRef = useRef<HTMLImageElement>(null);
 
   const onOpenPlantTooltip = useCallback(
     (id: string) => {
@@ -31,132 +40,58 @@ export default function FarmGrid({ openPlantSeed }: FarmGridProps) {
     [farmTooltip, setFarmTooltip]
   );
 
-  const handleDrop = useCallback(
-    (plantId: string, name: keyof typeof typeMap) => {
-      const hasEmptySlot = plants.some((plant) => plant.id === plantId && plant.type === 'none');
-      if (!hasEmptySlot) {
-        return;
-      }
-      const plant = plants.find((plant) => plant.phase !== 'seed' && plant.id === plantId);
-      if (!plant || seedId === null) {
-        return;
-      }
-      handleSowingSeed(seedId, plantId);
-      const newPlants: Plant[] = plants.map((plant) => {
-        return plant.id === plantId && plant.type === 'none'
-          ? {
-              ...plant,
-              type: typeMap[name],
-              phase: 'sprout' as const,
-            }
-          : plant;
-      });
-      setPlants(newPlants);
+  const onSowingSeed = useCallback(
+    (plotId: string) => {
+      handleSowingSeed(seedId ?? 0, plotId);
     },
-    [plants, seedId, setPlants]
+    [itemsConfigData, seedId]
+  );
+  const onClaimPlant = useCallback(
+    (id: string) => {
+      handleClaimPlant(id);
+    },
+    [handleClaimPlant]
   );
 
-  const onOpenPlantSeed = useCallback(() => {
-    if (plants.some((plant) => plant.type === 'none') && openPlantSeed) {
-      openPlantSeed();
-    } else {
-      () => {};
-    }
-  }, [openPlantSeed, plants]);
-
-  const treeHasGrown = (id: string, phase: PlantPhase) => {
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.id === id && phase === 'sprout' ? { ...plant, phase: 'mature' } : plant
-      )
-    );
-  };
-
-  const buyFast = useCallback(() => {}, []);
-
-  const plantMap = useMemo(() => {
-    return plants.map((plant) => (
-      <FarmTile
-        key={plant.id}
-        plantRef={plantRef}
-        plant={plant}
-        dataPlant={{
-          quantity: plant.quantity,
-          minute: plant.minute,
-          second: plant.second,
-          cost: plant.cost,
-        }}
-        onDrop={handleDrop}
-        onEndTime={(id, phase) => {
-          treeHasGrown(id, phase);
-        }}
-        isTooltipOpen={farmTooltip === plant.id && plant.phase === 'sprout'}
-        onClick={() => {
-          plant.type === 'none' ? onOpenPlantSeed() : onOpenPlantTooltip(plant.id);
-        }}
-        onBuyFast={buyFast}
-      />
-    ));
+  const farmMap = useMemo(() => {
+    return farmData.map((farmItem) => {
+      return (
+        <FarmTile
+          key={farmItem.id}
+          isTooltipOpen={farmTooltip === farmItem.id}
+          dataPlant={farmItem}
+          onOpenPlantSeed={openPlantSeed}
+          onOpenClaimPlant={openClaimPlant}
+          onOpenPlantTooltip={onOpenPlantTooltip}
+          onSowingSeed={onSowingSeed}
+          onClaimPlant={onClaimPlant}
+        />
+      );
+    });
   }, [
-    plants,
+    farmData,
     farmTooltip,
-    plantRef,
-    handleDrop,
-    onOpenPlantSeed,
+    openPlantSeed,
+    openClaimPlant,
     onOpenPlantTooltip,
-    treeHasGrown,
-    buyFast,
+    onSowingSeed,
+    onClaimPlant,
   ]);
 
-  const getPlantType = useCallback((id: number) => {
-    switch (id) {
-      case 3:
-        return typeMap.CORN;
-      case 4:
-        return typeMap.PADDY;
-
-      default:
-        return 'none';
-    }
-  }, []);
-
-  const getTime = useCallback((time: string | null, loadTime: number) => {
-    if (!time) {
-      return { minute: 0, second: 0 };
-    }
-    const timeGet = loadTime * 60 - dayjs().diff(dayjs(time), 'second');
-    if (timeGet <= 0) {
-      return { minute: 0, second: 0 };
-    }
-    return {
-      minute: Math.floor(timeGet / 60),
-      second: 0,
-    };
-  }, []);
-
-  useEffect(() => {
-    if (plantData.length === 0 || itemsConfigData.length === 0) return;
-    const plantArray = plantData.map((item) => {
-      const { minute, second } = getTime(
-        item.last_seed_at,
-        item?.seed?.metadata.max_loading_time ?? 0
-      );
-      return {
-        id: item.id,
-        type: getPlantType(item.seed_id),
-        phase: !item.last_seed_at
-          ? ('seed' as PlantPhase)
-          : minute > 0
-            ? ('sprout' as PlantPhase)
-            : ('mature' as PlantPhase),
-        quantity: item.seed?.metadata.max_production_holding ?? 0,
-        minute: minute,
-        second: second,
-        cost: 3,
-      };
-    });
-    setPlants(plantArray);
-  }, [plantData, itemsConfigData, setPlants, getPlantType, getTime]);
-
-  return <div className='farm-grid'>{plantMap}</div>;
+  return (
+    <div className='absolute bottom-0 left-0 right-0 top-[50vh] z-1 flex flex-col items-center justify-center'>
+      <div className='relative w-[90%] h-[90%]'>
+        {farmMap}
+        <>
+          {isBuilding && (
+            <div className={`absolute w-[16vw] z-2 tile `}>
+              <div className='relative w-full h-full flex items-center' onClick={onBuildPlot}>
+                <img src={PlotAdd} alt='Land Plot' className='w-full h-full z-3' />
+              </div>
+            </div>
+          )}
+        </>
+      </div>
+    </div>
+  );
 }
